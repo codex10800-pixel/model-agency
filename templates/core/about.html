@@ -1,0 +1,149 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}About Us - Face Modeling Agency{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="relative pt-32 pb-20 overflow-hidden">
+    <div class="absolute inset-0">
+        <img src="{% static 'images/bg-dark.jpg' %}" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/80"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-6 text-center">
+        <span class="inline-block px-4 py-1 bg-pink-500/20 border border-pink-500/30 rounded-full text-pink-300 text-sm font-medium mb-6">
+            Our Story
+        </span>
+
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            About <span class="text-pink-500">Us</span>
+        </h1>
+
+        <p class="text-gray-300 text-lg max-w-2xl mx-auto">
+            Discover how we turn raw talent into professional models ready for the industry.
+        </p>
+    </div>
+</section>
+
+
+<!-- STORY -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
+
+        <!-- TEXT -->
+        <div>
+            <h2 class="text-3xl font-bold mb-6">Who We Are</h2>
+
+            <p class="text-gray-700 mb-4 leading-relaxed">
+                Face Modeling Agency is focused on discovering young talent and helping them become professional models.
+            </p>
+
+            <p class="text-gray-600 leading-relaxed mb-4">
+                We provide training, photoshoots, and real industry exposure to prepare models for success.
+            </p>
+
+            <p class="text-gray-600 leading-relaxed">
+                Our goal is simple — take raw potential and turn it into real opportunities.
+            </p>
+        </div>
+
+        <!-- IMAGE -->
+        <div class="flex justify-center">
+            <img src="{% static 'images/founder.jpg' %}" 
+                 class="rounded-lg shadow-lg w-[420px] hover:scale-105 transition duration-500">
+        </div>
+
+    </div>
+</section>
+
+
+<!-- VALUES -->
+<section class="py-20 bg-gray-100">
+    <div class="max-w-7xl mx-auto px-6">
+
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-4">Our Values</h2>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+
+            <!-- VALUE -->
+            <div class="bg-white p-8 rounded-xl shadow hover:shadow-xl transition text-center">
+                <i class="fa-solid fa-heart text-3xl text-pink-500 mb-4"></i>
+                <h3 class="font-bold text-lg mb-2">Passion</h3>
+                <p class="text-gray-600 text-sm">
+                    We are passionate about helping young talent grow and succeed.
+                </p>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow hover:shadow-xl transition text-center">
+                <i class="fa-solid fa-star text-3xl text-pink-500 mb-4"></i>
+                <h3 class="font-bold text-lg mb-2">Excellence</h3>
+                <p class="text-gray-600 text-sm">
+                    We maintain high standards in training and representation.
+                </p>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow hover:shadow-xl transition text-center">
+                <i class="fa-solid fa-users text-3xl text-pink-500 mb-4"></i>
+                <h3 class="font-bold text-lg mb-2">Community</h3>
+                <p class="text-gray-600 text-sm">
+                    We support and uplift aspiring models across South Africa.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- FOUNDER -->
+<section class="py-20 bg-white">
+    <div class="max-w-5xl mx-auto px-6">
+
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold">Meet The Founder</h2>
+        </div>
+
+        <div class="bg-gray-100 rounded-xl p-8 flex flex-col md:flex-row items-center gap-8 shadow">
+
+            <img src="{% static 'images/founder.jpg' %}" 
+                 class="w-40 h-40 rounded-lg object-cover shadow">
+
+            <div class="text-center md:text-left">
+                <h3 class="text-xl font-bold">George Joja</h3>
+                <p class="text-pink-500 font-medium mb-2">Founder & Director</p>
+
+                <p class="text-gray-600 text-sm">
+                    George leads the agency with a clear vision — to discover, train, and connect new talent with real opportunities in the modeling industry.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- CTA -->
+<section class="relative py-24 text-center text-white overflow-hidden">
+    
+    <div class="absolute inset-0">
+        <img src="{% static 'images/runway.jpg' %}" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/70"></div>
+    </div>
+
+    <div class="relative z-10">
+        <h2 class="text-4xl font-bold mb-4">Start Your Journey</h2>
+        <p class="mb-6 text-gray-300">Ready to become a model?</p>
+
+        <a href="{% url 'apply' %}" 
+           class="bg-pink-500 px-8 py-3 rounded-md font-semibold hover:bg-pink-600 transition shadow-lg hover:scale-110">
+            Apply Now
+        </a>
+    </div>
+</section>
+
+{% endblock %}

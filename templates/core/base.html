@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Face Modeling Agency{% endblock %}</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-white">
+
+    <!-- NAVBAR -->
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+            <a href="/" class="flex items-center gap-2">
+                <img src="{% static 'images/logo.png' %}" alt="FACE" class="h-12">
+            </a>
+        
+
+            <div class="hidden md:flex items-center gap-8">
+                <a href="/" class="text-gray-700 hover:text-pink-500 font-medium transition">Home</a>
+                <a href="{% url 'about' %}" class="text-gray-700 hover:text-pink-500 font-medium transition">About</a>
+                <a href="{% url 'models' %}" class="text-gray-700 hover:text-pink-500 font-medium transition">Models</a>
+                <a href="{% url 'apply' %}" class="text-gray-700 hover:text-pink-500 font-medium transition">Apply</a>
+            </div>
+
+            <a href="{% url 'apply' %}" class="hidden md:inline-block bg-pink-500 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-pink-600 transition shadow-lg hover:shadow-pink-500/25">
+                Apply Now
+            </a>
+
+            <!-- Mobile menu button -->
+            <button class="md:hidden text-gray-700">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+
+        </div>
+    </nav>
+
+    <!-- PAGE CONTENT with top padding for fixed navbar -->
+    <div class="pt-20">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+</html>
