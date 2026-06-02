@@ -5,33 +5,93 @@
 
 {% block extra_css %}
 <style>
+    :root {
+        --gold: #D4AF37;
+        --gold-dark: #8c6400;
+        --gold-muted: #C9A84E;
+        --gold-bg: rgb(212, 175, 55);
+        --gold-shadow: rgb(42, 31, 4);
+    }
+
+    /* Animation classes */
     .animate-on-scroll {
         opacity: 0;
-        transform: translateY(40px);
+        transform: translateY(24px);
         transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     }
     .animate-on-scroll.visible {
         opacity: 1;
         transform: translateY(0);
     }
-    .gradient-text {
-        background: linear-gradient(135deg, #ec4899, #f472b6);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
+
+    .slide-left {
+        opacity: 0;
+        transform: translateX(-40px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     }
-    .section-divider {
-        width: 60px;
-        height: 2px;
-        background: linear-gradient(90deg, #ec4899, #f472b6);
-        margin: 0 auto;
+    .slide-left.visible {
+        opacity: 1;
+        transform: translateX(0);
     }
-    .premium-btn {
+
+    .slide-right {
+        opacity: 0;
+        transform: translateX(40px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .slide-right.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .fade-in {
+        opacity: 0;
+        transition: opacity 0.6s ease-out;
+    }
+    .fade-in.visible {
+        opacity: 1;
+    }
+
+    .scale-up {
+        opacity: 0;
+        transform: scale(0.95);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .scale-up.visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+    .delay-3 { transition-delay: 0.24s; }
+    .delay-4 { transition-delay: 0.32s; }
+    .delay-5 { transition-delay: 0.4s; }
+
+    /* Parallax support */
+    .parallax-bg {
+        will-change: transform;
+    }
+
+    /* Ken Burns zoom animation */
+    @keyframes kenBurns {
+        from { transform: scale(1) translateZ(0); }
+        to { transform: scale(1.08) translateZ(0); }
+    }
+    .ken-burns {
+        animation: kenBurns 20s ease-in-out infinite alternate;
+    }
+
+    /* Gold styling */
+    .gold-btn {
+        background: var(--gold);
+        color: white;
+        font-weight: bold;
+        transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
-        transition: all 0.3s ease;
     }
-    .premium-btn::before {
+    .gold-btn::before {
         content: '';
         position: absolute;
         top: 0;
@@ -41,8 +101,122 @@
         background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
         transition: left 0.5s ease;
     }
-    .premium-btn:hover::before {
+    .gold-btn:hover {
+        background: var(--gold-dark);
+        box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+        transform: translateY(-2px);
+    }
+    .gold-btn:hover::before {
         left: 100%;
+    }
+
+    .gold-chip {
+        background: rgba(212, 175, 55, 0.15);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        color: var(--gold);
+    }
+
+    .gold-icon {
+        color: var(--gold);
+    }
+
+    .gold-label {
+        color: var(--gold);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.875rem;
+    }
+
+    .gold-link {
+        color: var(--gold);
+        transition: all 0.3s ease;
+    }
+    .gold-link:hover {
+        color: var(--gold-dark);
+        text-decoration: underline;
+    }
+
+    /* Contact form styling */
+    .contact-form input,
+    .contact-form textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #fafafa;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+        outline: none;
+        border-color: var(--gold);
+        background: white;
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    }
+
+    .contact-card {
+        background: white;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+    .contact-card:hover {
+        border-color: var(--gold);
+        box-shadow: 0 12px 32px rgba(212, 175, 55, 0.2);
+        transform: translateY(-4px);
+    }
+
+    .contact-icon {
+        width: 56px;
+        height: 56px;
+        background: rgba(212, 175, 55, 0.1);
+        border: 2px solid var(--gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+    .contact-card:hover .contact-icon {
+        background: var(--gold);
+        transform: scale(1.1) rotate(5deg);
+    }
+    .contact-card:hover .contact-icon i {
+        color: white;
+    }
+
+    /* Hero background */
+    .hero-overlay {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
+    }
+
+    /* Section styling */
+    .contact-section {
+        background: linear-gradient(135deg, #fafafa 0%, white 100%);
+    }
+
+    .section-title {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #1f2937;
+    }
+    @media (min-width: 768px) {
+        .section-title {
+            font-size: 3rem;
+        }
+    }
+
+    .gold-divider {
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-muted));
+        margin: 0 auto;
+    }
+
+    /* CTA overlay styling */
+    .cta-overlay-gold {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(42, 31, 4, 0.7));
     }
 </style>
 {% endblock %}
@@ -50,59 +224,57 @@
 {% block content %}
 
 <!-- HERO -->
-<section class="relative pt-32 pb-20 overflow-hidden">
+<section class="relative pt-32 pb-20 overflow-hidden bg-black">
     <div class="absolute inset-0">
-        <img src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=1920&h=600&fit=crop" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gray-900/80"></div>
+        <img src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=1920&h=600&fit=crop" class="w-full h-full object-cover ken-burns parallax-bg" data-parallax-speed="0.22">
+        <div class="absolute inset-0 hero-overlay"></div>
     </div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-6 text-center">
-        <span class="inline-block px-4 py-1 bg-pink-500/20 border border-pink-500/30 rounded-full text-pink-300 text-sm font-medium mb-6">
+        <span class="inline-block px-4 py-2 gold-chip rounded-full text-sm font-medium mb-6 animate-on-scroll">
             Get In Touch
         </span>
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Contact <span class="gradient-text">Us</span>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 animate-on-scroll delay-1">
+            Contact <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500">Us</span>
         </h1>
-        <div class="section-divider"></div>
-        <p class="text-gray-300 text-lg mt-6 max-w-2xl mx-auto">
-            Have questions? We'd love to hear from you.
+        <div class="gold-divider animate-on-scroll delay-2"></div>
+        <p class="text-gray-200 text-lg mt-6 max-w-2xl mx-auto animate-on-scroll delay-3">
+            Have questions? We'd love to hear from you. Reach out and let's discuss how we can work together.
         </p>
     </div>
 </section>
 
 
 <!-- CONTACT FORM -->
-<section class="py-24 bg-white">
+<section class="py-24 bg-gradient-to-b from-gray-50 to-white">
     <div class="max-w-3xl mx-auto px-6">
 
-        <div class="bg-white p-8 md:p-12 rounded-3xl shadow-xl border border-gray-100 animate-on-scroll">
+        <div class="bg-white p-8 md:p-12 rounded-3xl shadow-xl border-2 border-gray-100 animate-on-scroll scale-up">
 
-            <form method="post" class="space-y-6">
+            <form method="post" class="space-y-6 contact-form">
                 {% csrf_token %}
 
                 <!-- NAME -->
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Your Name *</label>
+                <div class="slide-left animate-on-scroll delay-1">
+                    <label class="block gold-label mb-3">Your Name *</label>
                     {{ form.name }}
                 </div>
 
                 <!-- EMAIL -->
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Email Address *</label>
+                <div class="slide-left animate-on-scroll delay-2">
+                    <label class="block gold-label mb-3">Email Address *</label>
                     {{ form.email }}
                 </div>
 
                 <!-- MESSAGE -->
-                <div>
-                    <label class="block text-gray-700 font-medium mb-2">Message *</label>
+                <div class="slide-left animate-on-scroll delay-3">
+                    <label class="block gold-label mb-3">Message *</label>
                     {{ form.message }}
                 </div>
 
                 <!-- BUTTON -->
-                <button type="submit"
-                    class="premium-btn w-full bg-pink-500 text-white py-4 rounded-xl font-bold 
-                           hover:bg-pink-600 transition shadow-lg">
-                    Send Message
+                <button type="submit" class="gold-btn w-full py-4 rounded-xl font-bold shadow-lg animate-on-scroll delay-4 hover:shadow-2xl">
+                    <i class="fa-solid fa-paper-plane mr-2"></i> Send Message
                 </button>
 
             </form>
@@ -113,95 +285,109 @@
 
 
 <!-- CONTACT INFO -->
-<section class="py-24 bg-gray-50">
+<section class="py-24 contact-section">
     <div class="max-w-6xl mx-auto px-6">
-        <div class="text-center mb-12">
-            <span class="text-pink-500 font-semibold text-sm tracking-wider uppercase">Contact Info</span>
-            <h2 class="text-3xl font-bold text-gray-900 mt-4 mb-6">Get In Touch</h2>
-            <div class="section-divider"></div>
+        <div class="text-center mb-16 animate-on-scroll fade-in">
+            <span class="gold-label mb-4 inline-block">Contact Information</span>
+            <h2 class="section-title mb-6 slide-up animate-on-scroll delay-1">How to Reach Us</h2>
+            <div class="gold-divider animate-on-scroll delay-2"></div>
         </div>
 
         <div class="grid md:grid-cols-3 gap-8">
             
             <!-- EMAIL -->
-            <div class="bg-white p-8 rounded-2xl shadow-lg text-center hover:shadow-xl transition">
-                <div class="w-14 h-14 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-envelope text-pink-500 text-xl"></i>
+            <div class="contact-card p-8 rounded-2xl shadow-lg text-center scale-up animate-on-scroll">
+                <div class="contact-icon mx-auto mb-4">
+                    <i class="fa-solid fa-envelope text-2xl gold-icon"></i>
                 </div>
-                <h3 class="font-bold text-lg mb-2">Email</h3>
-                <p class="text-gray-600">ndiyisilejoja@gmail.com</p>
+                <h3 class="font-bold text-lg mb-2 text-gray-900">Email</h3>
+                <p class="text-gray-600 mb-3">ndiyisilejoja@gmail.com</p>
+                <a href="mailto:ndiyisilejoja@gmail.com" class="gold-link text-sm font-semibold">Send an email →</a>
             </div>
 
             <!-- PHONE -->
-            <div class="bg-white p-8 rounded-2xl shadow-lg text-center hover:shadow-xl transition">
-                <div class="w-14 h-14 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-phone text-pink-500 text-xl"></i>
+            <div class="contact-card p-8 rounded-2xl shadow-lg text-center scale-up animate-on-scroll delay-1">
+                <div class="contact-icon mx-auto mb-4">
+                    <i class="fa-solid fa-phone text-2xl gold-icon"></i>
                 </div>
-                <h3 class="font-bold text-lg mb-2">Phone</h3>
-                <p class="text-gray-600">064 853 8075</p>
+                <h3 class="font-bold text-lg mb-2 text-gray-900">Phone</h3>
+                <p class="text-gray-600 mb-3">064 853 8075</p>
+                <a href="tel:0648538075" class="gold-link text-sm font-semibold">Call us now →</a>
             </div>
 
             <!-- LOCATION -->
-            <div class="bg-white p-8 rounded-2xl shadow-lg text-center hover:shadow-xl transition">
-                <div class="w-14 h-14 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-location-dot text-pink-500 text-xl"></i>
+            <div class="contact-card p-8 rounded-2xl shadow-lg text-center scale-up animate-on-scroll delay-2">
+                <div class="contact-icon mx-auto mb-4">
+                    <i class="fa-solid fa-location-dot text-2xl gold-icon"></i>
                 </div>
-                <h3 class="font-bold text-lg mb-2">Location</h3>
-                <p class="text-gray-600">Eastern Cape, South Africa</p>
+                <h3 class="font-bold text-lg mb-2 text-gray-900">Location</h3>
+                <p class="text-gray-600 mb-3">Eastern Cape, South Africa</p>
+                <span class="gold-label text-xs">Available for inquiries worldwide</span>
             </div>
 
         </div>
     </div>
 </section>
 
-{% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    function handleScroll() {
-        const triggerBottom = window.innerHeight * 0.85;
-        document.querySelectorAll('.animate-on-scroll').forEach(el => {
-            const box = el.getBoundingClientRect();
-            if (box.top < triggerBottom) {
-                el.classList.add('visible');
-            }
-        });
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.15 });
-    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
-});
-</script>
-{% endblock %}
-
-    </div>
-</section>
-
-
-<!-- CTA (SAME STYLE AS HOME) -->
-<section class="relative py-20 text-center text-white">
-
+<!-- CTA SECTION -->
+<section class="relative py-24 text-center text-white overflow-hidden">
     <div class="absolute inset-0">
-        <img src="{% static 'images/runway.jpg' %}" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-black/70"></div>
+        <img src="{% static 'images/hero.png' %}" class="w-full h-full object-cover">
+        <div class="cta-overlay-gold"></div>
     </div>
 
-    <div class="relative z-10">
-        <h2 class="text-4xl font-bold mb-3">Ready to Start?</h2>
-        <p class="text-gray-300 mb-6">Join our agency and get discovered.</p>
+    <div class="relative z-10 max-w-4xl mx-auto px-6">
+        <h2 class="text-4xl md:text-5xl font-bold mb-4 animate-on-scroll slide-up">Ready to Join?</h2>
+        <p class="text-gray-200 text-lg mb-8 max-w-2xl mx-auto animate-on-scroll slide-up delay-1">
+            Don't miss the opportunity to be part of our growing community of talented models and actors.
+        </p>
 
-        <a href="{% url 'apply' %}" 
-           class="bg-pink-500 px-8 py-3 rounded-md font-semibold hover:bg-pink-600 transition shadow-lg hover:scale-105">
-            Apply Now
+        <a href="{% url 'apply' %}" class="gold-btn inline-block px-8 py-4 rounded-lg font-semibold shadow-lg hover:shadow-2xl animate-on-scroll delay-2">
+            <i class="fa-solid fa-star mr-2"></i> Apply Now
         </a>
     </div>
 </section>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // IntersectionObserver for scroll reveals
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        // Observe all animation elements
+        document.querySelectorAll('.animate-on-scroll, .slide-left, .slide-right, .fade-in, .scale-up, .slide-up').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Parallax scroll handler - throttled for performance
+        let parallaxTimeout;
+        function updateParallax() {
+            const scrollY = window.scrollY || window.pageYOffset;
+            const parallaxEls = document.querySelectorAll('[data-parallax-speed], [data-parallax]');
+            
+            parallaxEls.forEach(el => {
+                const speed = parseFloat(el.dataset.parallaxSpeed || el.dataset.parallax) || 0.5;
+                const translate = (scrollY * speed) * -0.12;
+                el.style.transform = `translate3d(0, ${translate}px, 0)`;
+            });
+        }
+
+        function throttledParallax() {
+            clearTimeout(parallaxTimeout);
+            parallaxTimeout = setTimeout(updateParallax, 16);
+        }
+
+        window.addEventListener('scroll', throttledParallax, { passive: true });
+        updateParallax();
+    });
+</script>
 {% endblock %}

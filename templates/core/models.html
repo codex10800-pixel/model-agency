@@ -1,121 +1,403 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}Our Models - Face Modeling Agency{% endblock %}
 
 {% block extra_css %}
 <style>
+    :root {
+        --gold: #D4AF37;
+        --gold-dark: #8c6400;
+        --gold-muted: #C9A84E;
+        --gold-bg: rgb(212, 175, 55);
+        --gold-shadow: rgb(42, 31, 4);
+    }
+
+    /* Animation classes */
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .animate-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .slide-left {
+        opacity: 0;
+        transform: translateX(-40px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .slide-left.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .slide-right {
+        opacity: 0;
+        transform: translateX(40px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .slide-right.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .fade-in {
+        opacity: 0;
+        transition: opacity 0.6s ease-out;
+    }
+    .fade-in.visible {
+        opacity: 1;
+    }
+
+    .scale-up {
+        opacity: 0;
+        transform: scale(0.95);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .scale-up.visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .slide-up {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .slide-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+    .delay-3 { transition-delay: 0.24s; }
+    .delay-4 { transition-delay: 0.32s; }
+    .delay-5 { transition-delay: 0.4s; }
+
+    /* Parallax support */
+    .parallax-bg {
+        will-change: transform;
+    }
+
+    /* Ken Burns zoom animation */
+    @keyframes kenBurns {
+        from { transform: scale(1) translateZ(0); }
+        to { transform: scale(1.08) translateZ(0); }
+    }
+    .ken-burns {
+        animation: kenBurns 20s ease-in-out infinite alternate;
+    }
+    /* Gold styling */
+    .gold-btn {
+        background: var(--gold);
+        color: white;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .gold-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s ease;
+    }
+    .gold-btn:hover {
+        background: var(--gold-dark);
+        box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+        transform: translateY(-2px);
+    }
+    .gold-btn:hover::before {
+        left: 100%;
+    }
+
+    .gold-chip {
+        background: rgba(212, 175, 55, 0.15);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        color: var(--gold);
+    }
+
+    .gold-icon {
+        color: var(--gold);
+    }
+
+    .gold-label {
+        color: var(--gold);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.875rem;
+    }
+
+    .gold-link {
+        color: var(--gold);
+        transition: all 0.3s ease;
+    }
+    .gold-link:hover {
+        color: var(--gold-dark);
+        text-decoration: underline;
+    }
+
+    /* Model card styling */
     .model-card {
-        transition: all 0.4s ease;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        background: white;
+        border: 2px solid transparent;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .model-card:hover {
-        transform: translateY(-10px);
+        border-color: var(--gold);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 60px rgba(212, 175, 55, 0.2);
     }
     .model-card:hover .model-overlay {
         opacity: 1;
         transform: translateY(0);
     }
+    .model-card:hover .model-image {
+        transform: scale(1.05);
+    }
     .model-overlay {
-        transform: translateY(10px);
+        transform: translateY(20px);
         opacity: 0;
         transition: all 0.4s ease;
+        background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 100%);
+    }
+    .model-image {
+        transition: transform 0.6s ease;
+    }
+
+    /* Filter bar styling */
+    .filter-bar {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    .filter-btn {
+        padding: 10px 20px;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        background: rgba(212, 175, 55, 0.1);
+        color: var(--gold);
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .filter-btn.active {
+        background: var(--gold);
+        color: white;
+        border-color: var(--gold);
+        box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    }
+    .filter-btn:hover {
+        background: var(--gold);
+        color: white;
+        border-color: var(--gold);
+    }
+
+    /* Pagination styling */
+    .pagination-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: rgba(212, 175, 55, 0.1);
+        color: var(--gold);
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    .pagination-btn.active {
+        background: var(--gold);
+        color: white;
+        border-color: var(--gold);
+    }
+    .pagination-btn:hover {
+        background: var(--gold);
+        color: white;
+        border-color: var(--gold);
+    }
+
+    .gold-badge {
+        background: rgba(212, 175, 55, 0.15);
+        border: 1px solid var(--gold);
+        color: var(--gold);
+    }
+
+    /* Hero background */
+    .hero-overlay {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
+    }
+
+    /* Section styling */
+    .section-title {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #1f2937;
+    }
+    @media (min-width: 768px) {
+        .section-title {
+            font-size: 3rem;
+        }
+    }
+
+    .gold-divider {
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-muted));
+        margin: 0 auto;
+    }
+
+    /* CTA overlay styling */
+    .cta-overlay-gold {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(42, 31, 4, 0.7));
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative pt-32 pb-20 overflow-hidden">
+<section class="relative pt-32 pb-20 overflow-hidden bg-black">
     <div class="absolute inset-0">
-        <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&h=600&fit=crop" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gray-900/80"></div>
+        <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&h=600&fit=crop" class="w-full h-full object-cover ken-burns parallax-bg" data-parallax-speed="0.22">
+        <div class="absolute inset-0 hero-overlay"></div>
     </div>
     
     <div class="relative z-10 max-w-7xl mx-auto px-6 text-center">
-        <span class="inline-block px-4 py-1 bg-pink-500/20 border border-pink-500/30 rounded-full text-pink-300 text-sm font-medium mb-6">
+        <span class="inline-block px-4 py-2 gold-chip rounded-full text-sm font-medium mb-6 animate-on-scroll">
             Our Talent
         </span>
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Meet Our <span class="gradient-text">Models</span>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 animate-on-scroll delay-1">
+            Meet Our <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500">Models</span>
         </h1>
-        <p class="text-gray-300 text-lg max-w-2xl mx-auto">
+        <div class="gold-divider animate-on-scroll delay-2"></div>
+        <p class="text-gray-200 text-lg max-w-2xl mx-auto mt-6 animate-on-scroll delay-3">
             Rising stars from the Eastern Cape ready to elevate your brand and projects.
         </p>
     </div>
 </section>
 
 <!-- Models Grid -->
-<section class="py-24 bg-white">
+<section class="py-24 bg-gradient-to-b from-white to-gray-50">
     <div class="max-w-7xl mx-auto px-6">
+        <!-- Filter Bar -->
+        <div class="text-center mb-16 animate-on-scroll fade-in">
+            <span class="gold-label mb-4 inline-block">Browse Talent</span>
+            <h2 class="section-title mb-6 slide-up animate-on-scroll delay-1">Our Model Portfolio</h2>
+            <div class="gold-divider animate-on-scroll delay-2"></div>
+        </div>
+
+        <div class="filter-bar animate-on-scroll delay-3">
+            <a href="{% url 'models' %}" class="filter-btn {% if not current_category %}active{% endif %}" aria-current="{% if not current_category %}true{% endif %}">
+                All <span class="text-xs ml-1">({{ model_category_counts.total|default:0 }})</span>
+            </a>
+            <a href="{% url 'models' %}?category=women" class="filter-btn {% if current_category == 'women' %}active{% endif %}" aria-current="{% if current_category == 'women' %}true{% endif %}">
+                Women <span class="text-xs ml-1">({{ model_category_counts.women|default:0 }})</span>
+            </a>
+            <a href="{% url 'models' %}?category=men" class="filter-btn {% if current_category == 'men' %}active{% endif %}" aria-current="{% if current_category == 'men' %}true{% endif %}">
+                Men <span class="text-xs ml-1">({{ model_category_counts.men|default:0 }})</span>
+            </a>
+            <a href="{% url 'models' %}?category=youth" class="filter-btn {% if current_category == 'youth' %}active{% endif %}" aria-current="{% if current_category == 'youth' %}true{% endif %}">
+                Youth <span class="text-xs ml-1">({{ model_category_counts.youth|default:0 }})</span>
+            </a>
+        </div>
         {% if models %}
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for model in models %}
-            <a href="{% url 'model_detail' model.pk %}" class="model-card group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl">
-                <div class="relative aspect-[3/4] overflow-hidden">
+            <a href="{% url 'model_detail' model.pk %}" class="model-card group relative overflow-hidden scale-up animate-on-scroll">
+                <div class="relative aspect-[3/4] overflow-hidden bg-gray-200">
                     {% if model.profile_image %}
-                    <img src="{{ model.profile_image.url }}" alt="{{ model.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <img src="{{ model.profile_image.url }}" alt="{{ model.name }}" class="model-image w-full h-full object-cover">
                     {% else %}
-                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                        <i class="fa-solid fa-user text-6xl text-gray-300"></i>
+                    <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                        <i class="fa-solid fa-user text-6xl text-gray-600"></i>
                     </div>
                     {% endif %}
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                 </div>
                 
-                <div class="model-overlay absolute bottom-0 left-0 right-0 p-6 bg-white">
-                    <h3 class="font-bold text-xl text-gray-900">{{ model.name }}</h3>
-                    <p class="text-pink-500 text-sm font-medium">Age {{ model.age }}</p>
-                    <div class="flex gap-2 mt-3">
+                <div class="model-overlay absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h3 class="font-bold text-xl mb-2">{{ model.name }}</h3>
+                    <p class="text-gold font-medium text-sm mb-3">Age {{ model.age }}</p>
+                    <div class="flex flex-wrap gap-2">
                         {% if model.height %}
-                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">{{ model.height }}</span>
+                        <span class="px-3 py-1 rounded-full bg-white/20 text-gray-100 text-xs font-medium">{{ model.height }}</span>
                         {% endif %}
                         {% if model.location %}
-                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">{{ model.location }}</span>
+                        <span class="px-3 py-1 rounded-full bg-white/20 text-gray-100 text-xs font-medium">📍 {{ model.location }}</span>
                         {% endif %}
                     </div>
                 </div>
                 
                 {% if model.is_featured %}
-                <div class="absolute top-4 right-4">
-                    <span class="px-3 py-1 bg-pink-500 text-white text-sm font-semibold rounded-full">Featured</span>
+                <div class="absolute top-4 right-4 animate-on-scroll delay-2">
+                    <span class="px-3 py-1 rounded-full gold-badge text-sm font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-star"></i> Featured
+                    </span>
                 </div>
                 {% endif %}
             </a>
             {% endfor %}
         </div>
 
-        <!-- Pagination -->
         {% if page_obj.has_other_pages %}
-        <div class="flex justify-center items-center gap-2 mt-16">
+        <div class="flex justify-center items-center gap-2 mt-16 animate-on-scroll">
             {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}" class="w-10 h-10 bg-gray-100 text-gray-600 rounded-lg flex items-center justify-center hover:bg-pink-500 hover:text-white transition">
+            {% if current_category %}
+            <a href="?page={{ page_obj.previous_page_number }}&category={{ current_category }}" class="pagination-btn">
                 <i class="fa-solid fa-chevron-left"></i>
             </a>
+            {% else %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+            {% endif %}
             {% endif %}
 
             {% for num in page_obj.paginator.page_range %}
                 {% if page_obj.number == num %}
-                <span class="w-10 h-10 bg-pink-500 text-white font-medium rounded-lg flex items-center justify-center">{{ num }}</span>
+                <span class="pagination-btn active">{{ num }}</span>
                 {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                <a href="?page={{ num }}" class="w-10 h-10 bg-gray-100 text-gray-600 rounded-lg flex items-center justify-center hover:bg-pink-500 hover:text-white transition">{{ num }}</a>
+                <a href="?page={{ num }}{% if current_category %}&category={{ current_category }}{% endif %}" class="pagination-btn">{{ num }}</a>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="w-10 h-10 bg-gray-100 text-gray-600 rounded-lg flex items-center justify-center hover:bg-pink-500 hover:text-white transition">
+            {% if current_category %}
+            <a href="?page={{ page_obj.next_page_number }}&category={{ current_category }}" class="pagination-btn">
                 <i class="fa-solid fa-chevron-right"></i>
             </a>
+            {% else %}
+            <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn">
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+            {% endif %}
             {% endif %}
         </div>
         {% endif %}
 
         {% else %}
-        <div class="text-center py-16">
-            <div class="w-24 h-24 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fa-solid fa-users text-4xl text-pink-500"></i>
+        <div class="text-center py-24 animate-on-scroll fade-in">
+            <div class="w-24 h-24 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fa-solid fa-users text-4xl text-white"></i>
             </div>
-            <h3 class="font-bold text-2xl text-gray-900 mb-4">No Models Yet</h3>
-            <p class="text-gray-500 mb-8">Be the first to join our roster of exceptional talent!</p>
-            <a href="{% url 'apply' %}" class="premium-btn inline-flex items-center gap-2 bg-pink-500 text-white px-8 py-4 rounded-xl font-semibold hover:bg-pink-600 transition shadow-lg">
+            <h3 class="font-bold text-3xl text-gray-900 mb-4 slide-up animate-on-scroll delay-1">No Models Yet</h3>
+            <p class="text-gray-500 mb-8 max-w-md mx-auto animate-on-scroll delay-2">Be the first to join our roster of exceptional talent!</p>
+            <a href="{% url 'apply' %}" class="gold-btn inline-flex items-center gap-2 px-8 py-4 rounded-lg font-semibold shadow-lg hover:shadow-2xl animate-on-scroll delay-3">
                 Apply Now <i class="fa-solid fa-arrow-right"></i>
             </a>
         </div>
@@ -124,20 +406,63 @@
 </section>
 
 <!-- CTA Section -->
-<section class="relative py-24 text-white overflow-hidden">
+<section class="relative py-24 text-center text-white overflow-hidden">
     <div class="absolute inset-0">
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&h=600&fit=crop" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-r from-pink-600/90 to-purple-600/90"></div>
+        <img src="{% static 'images/hero.png' %}" class="w-full h-full object-cover ken-burns parallax-bg" data-parallax-speed="0.18">
+        <div class="cta-overlay-gold"></div>
     </div>
     
-    <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold mb-6">Looking for Talent?</h2>
-        <p class="text-white/80 text-lg mb-8 max-w-xl mx-auto">
+    <div class="relative z-10 max-w-4xl mx-auto px-6">
+        <h2 class="text-4xl md:text-5xl font-bold mb-4 animate-on-scroll slide-up">Looking for Talent?</h2>
+        <p class="text-gray-200 text-lg mb-8 max-w-xl mx-auto animate-on-scroll slide-up delay-1">
             We have a diverse roster of professional models ready for your projects. Let us help you find the perfect match.
         </p>
-        <a href="{% url 'hire' %}" class="premium-btn inline-flex items-center gap-2 bg-white text-pink-600 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition shadow-xl">
+        <a href="{% url 'hire' %}" class="gold-btn inline-flex items-center gap-2 px-8 py-4 rounded-lg font-semibold shadow-lg hover:shadow-2xl animate-on-scroll delay-2">
             Hire Talent <i class="fa-solid fa-arrow-right"></i>
         </a>
     </div>
 </section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // IntersectionObserver for scroll reveals
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        // Observe all animation elements
+        document.querySelectorAll('.animate-on-scroll, .slide-left, .slide-right, .fade-in, .scale-up, .slide-up').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Parallax scroll handler - throttled for performance
+        let parallaxTimeout;
+        function updateParallax() {
+            const scrollY = window.scrollY || window.pageYOffset;
+            const parallaxEls = document.querySelectorAll('[data-parallax-speed], [data-parallax]');
+            
+            parallaxEls.forEach(el => {
+                const speed = parseFloat(el.dataset.parallaxSpeed || el.dataset.parallax) || 0.5;
+                const translate = (scrollY * speed) * -0.12;
+                el.style.transform = `translate3d(0, ${translate}px, 0)`;
+            });
+        }
+
+        function throttledParallax() {
+            clearTimeout(parallaxTimeout);
+            parallaxTimeout = setTimeout(updateParallax, 16);
+        }
+
+        window.addEventListener('scroll', throttledParallax, { passive: true });
+        updateParallax();
+    });
+</script>
 {% endblock %}

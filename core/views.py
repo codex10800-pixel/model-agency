@@ -2,17 +2,32 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, ListView, DetailView, FormView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .models import ModelProfile, PortfolioImage
+from .models import ModelProfile, PortfolioImage, ActorProfile
 from .forms import ApplicationForm, ContactForm
 
 
 # Home View
 def home(request):
     featured_models = ModelProfile.objects.filter(is_featured=True)[:6]
-    all_models = ModelProfile.objects.all()[:4]
+
+    # Models split by category
+    models_women = ModelProfile.objects.filter(category='women')[:6]
+    models_men = ModelProfile.objects.filter(category='men')[:6]
+    models_youth = ModelProfile.objects.filter(category='youth')[:6]
+
+    # Actors split by category
+    actors_women = ActorProfile.objects.filter(category='women')[:6]
+    actors_men = ActorProfile.objects.filter(category='men')[:6]
+    actors_youth = ActorProfile.objects.filter(category='youth')[:6]
+
     context = {
         'featured_models': featured_models,
-        'all_models': all_models,
+        'models_women': models_women,
+        'models_men': models_men,
+        'models_youth': models_youth,
+        'actors_women': actors_women,
+        'actors_men': actors_men,
+        'actors_youth': actors_youth,
     }
     return render(request, 'core/home.html', context)
 
@@ -30,7 +45,37 @@ class ModelsListView(ListView):
     paginate_by = 9
 
     def get_queryset(self):
-        return ModelProfile.objects.all().order_by('-created_at')
+        qs = ModelProfile.objects.all().order_by('-created_at')
+        category = self.request.GET.get('category')
+        if category in ('women', 'men', 'youth'):
+            qs = qs.filter(category=category)
+        return qs
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = self.request.GET.get('category', '')
+        context['current_category'] = category
+        return context
+
+
+class ActorsListView(ListView):
+    model = ActorProfile
+    template_name = 'core/actors.html'
+    context_object_name = 'actors'
+    paginate_by = 9
+
+    def get_queryset(self):
+        qs = ActorProfile.objects.all().order_by('-created_at')
+        category = self.request.GET.get('category')
+        if category in ('women', 'men', 'youth'):
+            qs = qs.filter(category=category)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = self.request.GET.get('category', '')
+        context['current_category'] = category
+        return context
 
 
 # Model Detail View
@@ -44,6 +89,18 @@ def model_detail(request, pk):
         'related_models': related_models,
     }
     return render(request, 'core/model_detail.html', context)
+
+
+def actor_detail(request, pk):
+    actor = get_object_or_404(ActorProfile, pk=pk)
+    portfolio_images = actor.portfolio_images.all()
+    related_actors = ActorProfile.objects.exclude(pk=pk).order_by('-created_at')[:4]
+    context = {
+        'actor': actor,
+        'portfolio_images': portfolio_images,
+        'related_actors': related_actors,
+    }
+    return render(request, 'core/actor_detail.html', context)
 
 
 # Apply View
@@ -81,7 +138,9 @@ class ContactView(FormView):
 # Hire Talent View
 def hire(request):
     models = ModelProfile.objects.all()
+    actors = ActorProfile.objects.all()
     context = {
         'models': models,
+        'actors': actors,
     }
     return render(request, 'core/hire.html', context)

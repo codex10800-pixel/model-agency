@@ -1,0 +1,443 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ actor.name }} - Face Modeling Agency{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --gold: #D4AF37;
+        --gold-dark: #8c6400;
+        --gold-muted: #C9A84E;
+        --gold-bg: rgb(212, 175, 55);
+        --gold-shadow: rgb(42, 31, 4);
+    }
+
+    /* Animation classes */
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .animate-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .slide-left {
+        opacity: 0;
+        transform: translateX(-40px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .slide-left.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .slide-right {
+        opacity: 0;
+        transform: translateX(40px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .slide-right.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .fade-in {
+        opacity: 0;
+        transition: opacity 0.6s ease-out;
+    }
+    .fade-in.visible {
+        opacity: 1;
+    }
+
+    .scale-up {
+        opacity: 0;
+        transform: scale(0.95);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .scale-up.visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .slide-up {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .slide-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+    .delay-3 { transition-delay: 0.24s; }
+    .delay-4 { transition-delay: 0.32s; }
+    .delay-5 { transition-delay: 0.4s; }
+
+    /* Parallax support */
+    .parallax-bg {
+        will-change: transform;
+    }
+
+    /* Ken Burns zoom animation */
+    @keyframes kenBurns {
+        from { transform: scale(1) translateZ(0); }
+        to { transform: scale(1.08) translateZ(0); }
+    }
+    .ken-burns {
+        animation: kenBurns 20s ease-in-out infinite alternate;
+    }
+
+    /* Gold styling */
+    .gold-btn {
+        background: var(--gold);
+        color: white;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .gold-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s ease;
+    }
+    .gold-btn:hover {
+        background: var(--gold-dark);
+        box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+        transform: translateY(-2px);
+    }
+    .gold-btn:hover::before {
+        left: 100%;
+    }
+
+    .gold-chip {
+        background: rgba(212, 175, 55, 0.15);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        color: var(--gold);
+    }
+
+    .gold-label {
+        color: var(--gold);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.875rem;
+    }
+
+    /* Breadcrumb styling */
+    .breadcrumb-link {
+        color: #9ca3af;
+        transition: all 0.3s ease;
+    }
+    .breadcrumb-link:hover {
+        color: var(--gold);
+    }
+
+    /* Detail panel styling */
+    .detail-panel {
+        background: white;
+        border: 2px solid transparent;
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .detail-panel:hover {
+        border-color: var(--gold);
+        box-shadow: 0 20px 60px rgba(212, 175, 55, 0.2);
+    }
+
+    .gallery-card {
+        background: white;
+        border: 2px solid transparent;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .gallery-card:hover {
+        border-color: var(--gold);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 60px rgba(212, 175, 55, 0.2);
+    }
+    .gallery-card:hover img {
+        transform: scale(1.05);
+    }
+
+    .gallery-card img {
+        transition: transform 0.6s ease;
+    }
+
+    .related-card {
+        background: white;
+        border: 2px solid transparent;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .related-card:hover {
+        border-color: var(--gold);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 60px rgba(212, 175, 55, 0.2);
+    }
+    .related-card:hover img {
+        transform: scale(1.05);
+    }
+
+    .related-card img {
+        transition: transform 0.6s ease;
+    }
+
+    /* Info pill styling */
+    .info-pill {
+        background: rgba(212, 175, 55, 0.15);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        color: var(--gold);
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .info-pill:hover {
+        background: var(--gold);
+        color: white;
+        box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    }
+
+    /* About section styling */
+    .about-panel {
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(212, 175, 55, 0.02) 100%);
+        border: 2px solid rgba(212, 175, 55, 0.2);
+        border-radius: 1.5rem;
+        padding: 2rem;
+    }
+
+    .about-panel h2 {
+        color: var(--gold);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 1rem;
+    }
+
+    .about-text {
+        color: #4b5563;
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+
+    .section-title {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #1f2937;
+    }
+    @media (min-width: 768px) {
+        .section-title {
+            font-size: 3rem;
+        }
+    }
+
+    .gold-divider {
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-muted));
+        margin: 0 auto;
+    }
+
+    /* Button group styling */
+    .button-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    /* Section backgrounds */
+    .section-bg-light {
+        background: linear-gradient(135deg, #fafafa 0%, white 100%);
+    }
+
+    .section-bg-dark {
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<section class="pt-28 pb-6 bg-gradient-to-b from-gray-900 to-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <nav class="flex flex-wrap items-center gap-2 text-sm animate-on-scroll fade-in">
+            <a href="{% url 'home' %}" class="breadcrumb-link hover:text-gold">Home</a>
+            <span class="text-gray-400">/</span>
+            <a href="{% url 'actors' %}" class="breadcrumb-link hover:text-gold">Actors</a>
+            <span class="text-gray-400">/</span>
+            <span class="font-bold text-gray-900">{{ actor.name }}</span>
+        </nav>
+    </div>
+</section>
+
+<!-- Actor Profile -->
+<section class="py-16 section-bg-light">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-12 items-start">
+            <div class="detail-panel scale-up animate-on-scroll overflow-hidden">
+                <div class="relative aspect-[3/4] overflow-hidden bg-gray-200">
+                    {% if actor.profile_image %}
+                    <img src="{{ actor.profile_image.url }}" alt="{{ actor.name }}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
+                    {% else %}
+                    <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                        <i class="fa-solid fa-user text-6xl text-gray-600"></i>
+                    </div>
+                    {% endif %}
+                    {% if actor.is_featured %}
+                    <div class="absolute top-6 right-6 animate-on-scroll delay-1">
+                        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full gold-chip font-semibold text-sm">
+                            <i class="fa-solid fa-star"></i> Featured
+                        </span>
+                    </div>
+                    {% endif %}
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                </div>
+            </div>
+
+            <div class="slide-right animate-on-scroll">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{{ actor.name }}</h1>
+                <div class="flex flex-wrap gap-3 mb-8">
+                    <span class="info-pill px-4 py-2 rounded-full text-sm font-medium animate-on-scroll delay-1">{{ actor.get_category_display }}</span>
+                    <span class="info-pill px-4 py-2 rounded-full text-sm font-medium animate-on-scroll delay-2"><i class="fa-solid fa-cake-candles mr-2"></i>{{ actor.age }} years</span>
+                    <span class="info-pill px-4 py-2 rounded-full text-sm font-medium animate-on-scroll delay-3"><i class="fa-solid fa-ruler-vertical mr-2"></i>{{ actor.height }}</span>
+                    <span class="info-pill px-4 py-2 rounded-full text-sm font-medium animate-on-scroll delay-4"><i class="fa-solid fa-location-dot mr-2"></i>{{ actor.location }}</span>
+                </div>
+                <div class="about-panel animate-on-scroll delay-2">
+                    <h2 class="text-xl">About</h2>
+                    <p class="about-text">{{ actor.bio }}</p>
+                </div>
+                <div class="button-group mt-10 animate-on-scroll delay-3">
+                    <a href="{% url 'hire' %}" class="gold-btn inline-flex items-center justify-center px-6 py-4 rounded-lg font-semibold shadow-lg hover:shadow-2xl">
+                        <i class="fa-solid fa-calendar mr-2"></i> Book This Actor
+                    </a>
+                    <a href="{% url 'contact' %}" class="gold-btn inline-flex items-center justify-center px-6 py-4 rounded-lg font-semibold shadow-lg hover:shadow-2xl">
+                        <i class="fa-solid fa-envelope mr-2"></i> Contact Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Portfolio Gallery -->
+<section class="py-24 section-bg-dark">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16 animate-on-scroll fade-in">
+            <span class="gold-label mb-4 inline-block">Professional Work</span>
+            <h2 class="section-title mb-6 slide-up animate-on-scroll delay-1 text-white">Portfolio Gallery</h2>
+            <div class="gold-divider animate-on-scroll delay-2"></div>
+            <p class="text-gray-300 mt-4 animate-on-scroll delay-3">Professional shots and previous projects</p>
+        </div>
+
+        {% if portfolio_images %}
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for portfolio in portfolio_images %}
+            <div class="gallery-card aspect-square scale-up animate-on-scroll">
+                <img src="{{ portfolio.image.url }}" alt="Portfolio" class="w-full h-full object-cover">
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-24 animate-on-scroll fade-in">
+            <div class="w-20 h-20 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fa-solid fa-images text-3xl text-white"></i>
+            </div>
+            <p class="text-gray-400 text-lg">No portfolio images available yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Related Actors -->
+<section class="py-24 section-bg-light">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16 animate-on-scroll fade-in">
+            <span class="gold-label mb-4 inline-block">More Talent</span>
+            <h2 class="section-title mb-6 slide-up animate-on-scroll delay-1">Other <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-300">Actors</span></h2>
+            <div class="gold-divider animate-on-scroll delay-2"></div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for related in related_actors %}
+            <a href="{% url 'actor_detail' related.pk %}" class="related-card scale-up animate-on-scroll group relative overflow-hidden">
+                <div class="aspect-[3/4] overflow-hidden bg-gray-200">
+                    {% if related.profile_image %}
+                    <img src="{{ related.profile_image.url }}" alt="{{ related.name }}" class="w-full h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                        <i class="fa-solid fa-user text-5xl text-gray-600"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+                    <h3 class="text-lg font-bold text-white">{{ related.name }}</h3>
+                    <p class="text-gray-300 text-sm"><i class="fa-solid fa-cake-candles mr-1"></i>{{ related.age }} • <i class="fa-solid fa-ruler-vertical mr-1"></i>{{ related.height }}</p>
+                </div>
+            </a>
+            {% empty %}
+            <div class="col-span-full text-center py-16 animate-on-scroll fade-in">
+                <p class="text-gray-500 text-lg">No other actors available.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // IntersectionObserver for scroll reveals
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        // Observe all animation elements
+        document.querySelectorAll('.animate-on-scroll, .slide-left, .slide-right, .fade-in, .scale-up, .slide-up').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Parallax scroll handler - throttled for performance
+        let parallaxTimeout;
+        function updateParallax() {
+            const scrollY = window.scrollY || window.pageYOffset;
+            const parallaxEls = document.querySelectorAll('[data-parallax-speed], [data-parallax]');
+            
+            parallaxEls.forEach(el => {
+                const speed = parseFloat(el.dataset.parallaxSpeed || el.dataset.parallax) || 0.5;
+                const translate = (scrollY * speed) * -0.12;
+                el.style.transform = `translate3d(0, ${translate}px, 0)`;
+            });
+        }
+
+        function throttledParallax() {
+            clearTimeout(parallaxTimeout);
+            parallaxTimeout = setTimeout(updateParallax, 16);
+        }
+
+        window.addEventListener('scroll', throttledParallax, { passive: true });
+        updateParallax();
+    });
+</script>
+{% endblock %}

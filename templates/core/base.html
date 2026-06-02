@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FACE Modeling Agency represents luxury fashion talent, editorial models, and cinematic campaign creatives. Elite representation for modern talent, luxury campaigns, and premium storytelling.">
     <title>{% block title %}Face Modeling Agency{% endblock %}</title>
 
     <!-- Tailwind CDN -->
@@ -12,47 +13,299 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        :root {
+            --gold: #D4AF37;
+            --gold-soft: #F8D568;
+            --gold-dark: #D4AF37;
+            --gold-gradient: linear-gradient(135deg, #D4AF37, #C7A34D, #A88635);
+            --black: #0B0B0B;
+            --white: #FFFFFF;
+            --off-white: #FAFAFA;
+            --light-gray: #F5F5F5;
+            --text-muted: #6B7280;
+            --gold-accent: rgba(212, 175, 55, 0.08);
+            --gold-border: rgba(212, 175, 55, 0.08);
+            --gold-glow: rgba(212,175,55,0.12);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--black);
+            background: var(--white);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+        }
+
+        .hero-title,
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        .logo-font {
+            font-family: 'Playfair Display', serif;
+            font-weight: 800;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .page-container {
+            padding-top: 5rem;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        body.loaded .page-container {
+            opacity: 1;
+            transform: none;
+        }
+
+        .glass-nav {
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(212,175,55,0.06);
+            box-shadow: 0 8px 30px rgba(11,11,11,0.06), 0 0 20px rgba(212,175,55,0.04);
+        }
+
+        .nav-link {
+            color: var(--black);
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover { color: var(--gold-soft); }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after { width: 100%; }
+
+        .nav-link.active { color: var(--gold-soft); }
+
+        /* Dropdown Menu Styles (desktop hover only) */
+        .dropdown-menu { position: relative; display: inline-block; }
+        .dropdown-toggle { display: flex; align-items: center; gap: 0.4rem; }
+        .dropdown-content { position: absolute; top: 100%; left: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(8px); border: 1px solid rgba(212,175,55,0.08); border-radius: 8px; min-width: 200px; padding: 8px 0; box-shadow: 0 10px 30px rgba(11,11,11,0.06); z-index: 100; display: none; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 0.18s ease, transform 0.18s ease; }
+        .dropdown-item { color: var(--black); padding: 8px 16px; display: block; transition: all 0.18s ease; text-decoration: none; font-size: 0.875rem; letter-spacing: 0.12em; text-transform: uppercase; }
+        .dropdown-item:hover { color: var(--gold-soft); background: rgba(212,175,55,0.06); padding-left: 20px; }
+        .dropdown-item.active, .dropdown-item[aria-current="true"] { color: var(--gold-soft); background: rgba(212,175,55,0.08); padding-left: 20px; }
+
+        /* Only show dropdown on hover for desktop (min-width: 768px) */
+        @media (min-width: 768px) {
+            .dropdown-menu:hover .dropdown-content { display: block; opacity: 1; visibility: visible; transform: translateY(0); }
+        }
+
+        .site-nav { position: fixed; width: 100%; z-index: 50; background: transparent; border-bottom: 0 solid transparent; transition: all 0.35s ease; color: var(--black); }
+
+        .nav-scrolled { background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(11,11,11,0.06); }
+
+        .nav-cta { background: var(--gold-gradient); color: #111; border: 1px solid var(--gold-soft); }
+
+        .footer-panel { background: var(--off-white); border-top: 2px solid rgba(212,175,55,0.06); position: relative; }
+
+        .footer-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--gold-gradient); }
+
+        .footer-text { color: var(--text-muted); }
+
+        .mobile-menu { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(255,255,255,0.98); backdrop-filter: blur(8px); z-index: 40; display: flex; flex-direction: column; justify-content: center; align-items: center; transform: translateY(-100%); transition: transform 0.3s ease; opacity: 0; visibility: hidden; border-bottom: 2px solid rgba(212,175,55,0.06); }
+        .mobile-menu.active { transform: translateY(0); opacity: 1; visibility: visible; }
+
+        .mobile-menu-link { color: var(--black); font-size: 24px; text-transform: uppercase; letter-spacing: 0.1em; margin: 20px 0; transition: color 0.3s ease; position: relative; font-family: 'Playfair Display', serif; font-weight: 600; }
+        .mobile-menu-link:hover, .mobile-menu-link.active { color: var(--gold-soft); }
+
+        .hamburger { display: block; cursor: pointer; transition: transform 0.3s ease; }
+        .hamburger.active { transform: rotate(90deg); }
+        .hamburger span { display: block; width: 25px; height: 3px; background: var(--gold-soft); margin: 5px 0; transition: all 0.3s ease; border-radius: 2px; box-shadow: 0 0 5px var(--gold-accent); }
+        .hamburger.active span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+
+        /* Utility button styles */
+        .btn { display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 9999px; padding: 0.5rem 1rem; font-weight: 600; transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+        .btn-primary { background: linear-gradient(90deg, #D4AF37, #F8D568); color: #0b0b0b; border: 1px solid rgba(212,175,55,0.5); box-shadow: 0 8px 30px rgba(212,175,55,0.12); }
+
+        /* Preserve overlay text colors when converting dark->light mapping */
+        .model-overlay, .model-overlay * { color: #ffffff !important; }
     </style>
+    {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-white">
+<body class="bg-white text-black">
+
+    <div id="loader">
+        <div class="loader-dot"></div>
+        <div class="loader-dot"></div>
+        <div class="loader-dot"></div>
+    </div>
 
     <!-- NAVBAR -->
-    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-
-            <a href="/" class="flex items-center gap-2">
-                <img src="{% static 'images/logo.png' %}" alt="FACE" class="h-12">
-            </a>
+    <nav class="site-nav fixed top-0 left-0 w-full z-50">
         
+            <div class="glass-nav flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-4 rounded-full">
+                <a href="/" class="flex items-center gap-2 sm:gap-3 logo-font">
+                    <img src="{% static 'images/logo.png' %}" alt="FACE" class="h-10 sm:h-12 lg:h-14 w-auto object-contain">
+                </a>
 
-            <div class="hidden md:flex items-center gap-8">
-                <a href="/" class="text-gray-700 hover:text-pink-500 font-medium transition">Home</a>
-                <a href="{% url 'about' %}" class="text-gray-700 hover:text-pink-500 font-medium transition">About</a>
-                <a href="{% url 'models' %}" class="text-gray-700 hover:text-pink-500 font-medium transition">Models</a>
-                <a href="{% url 'apply' %}" class="text-gray-700 hover:text-pink-500 font-medium transition">Apply</a>
+                <div class="hidden md:flex items-center gap-6 lg:gap-10 text-xs lg:text-sm uppercase tracking-[0.2em] lg:tracking-[0.3em]">
+                    <a href="/" class="nav-link">Home</a>
+
+                    <!-- Models Dropdown -->
+                    <div class="dropdown-menu">
+                        <div class="nav-link dropdown-toggle cursor-pointer {% if request.path|slice:':7' == '/models' %}active{% endif %}">
+                            Models
+                            <i class="fa-solid fa-chevron-down text-[0.7em]"></i>
+                        </div>
+                        {% with cp=request.path|slice:":7" cc=request.GET.category|default:'' %}
+                        <div class="dropdown-content">
+                            <a href="{% url 'models' %}" class="dropdown-item {% if cp == '/models' and not cc %}active{% endif %}" aria-current="{% if cp == '/models' and not cc %}true{% endif %}">All <span class="text-xs text-gray-400">({{ model_category_counts.total|default:0 }})</span></a>
+                            <a href="{% url 'models' %}?category=women" class="dropdown-item {% if cp == '/models' and cc == 'women' %}active{% endif %}" aria-current="{% if cp == '/models' and cc == 'women' %}true{% endif %}">Women <span class="text-xs text-gray-400">({{ model_category_counts.women|default:0 }})</span></a>
+                            <a href="{% url 'models' %}?category=men" class="dropdown-item {% if cp == '/models' and cc == 'men' %}active{% endif %}" aria-current="{% if cp == '/models' and cc == 'men' %}true{% endif %}">Men <span class="text-xs text-gray-400">({{ model_category_counts.men|default:0 }})</span></a>
+                            <a href="{% url 'models' %}?category=youth" class="dropdown-item {% if cp == '/models' and cc == 'youth' %}active{% endif %}" aria-current="{% if cp == '/models' and cc == 'youth' %}true{% endif %}">Youth <span class="text-xs text-gray-400">({{ model_category_counts.youth|default:0 }})</span></a>
+                        </div>
+                        {% endwith %}
+                    </div>
+
+                    <!-- Actors Dropdown -->
+                    <div class="dropdown-menu">
+                        <div class="nav-link dropdown-toggle cursor-pointer {% if request.path|slice:':7' == '/actors' %}active{% endif %}">
+                            Actors
+                            <i class="fa-solid fa-chevron-down text-[0.7em]"></i>
+                        </div>
+                        {% with cp=request.path|slice:":7" cc=request.GET.category|default:'' %}
+                        <div class="dropdown-content">
+                            <a href="{% url 'actors' %}" class="dropdown-item {% if cp == '/actors' and not cc %}active{% endif %}" aria-current="{% if cp == '/actors' and not cc %}true{% endif %}">All <span class="text-xs text-gray-400">({{ actor_category_counts.total|default:0 }})</span></a>
+                            <a href="{% url 'actors' %}?category=women" class="dropdown-item {% if cp == '/actors' and cc == 'women' %}active{% endif %}" aria-current="{% if cp == '/actors' and cc == 'women' %}true{% endif %}">Women <span class="text-xs text-gray-400">({{ actor_category_counts.women|default:0 }})</span></a>
+                            <a href="{% url 'actors' %}?category=men" class="dropdown-item {% if cp == '/actors' and cc == 'men' %}active{% endif %}" aria-current="{% if cp == '/actors' and cc == 'men' %}true{% endif %}">Men <span class="text-xs text-gray-400">({{ actor_category_counts.men|default:0 }})</span></a>
+                            <a href="{% url 'actors' %}?category=youth" class="dropdown-item {% if cp == '/actors' and cc == 'youth' %}active{% endif %}" aria-current="{% if cp == '/actors' and cc == 'youth' %}true{% endif %}">Youth <span class="text-xs text-gray-400">({{ actor_category_counts.youth|default:0 }})</span></a>
+                        </div>
+                        {% endwith %}
+
+                    </div>
+
+                    <a href="{% url 'about' %}" class="nav-link">About</a>
+                    <a href="{% url 'apply' %}" class="nav-link">Apply</a>
+                    <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+                </div>
+
+                <button class="hamburger md:hidden" id="mobile-menu-btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
-
-            <a href="{% url 'apply' %}" class="hidden md:inline-block bg-pink-500 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-pink-600 transition shadow-lg hover:shadow-pink-500/25">
-                Apply Now
-            </a>
-
-            <!-- Mobile menu button -->
-            <button class="md:hidden text-gray-700">
-                <i class="fa-solid fa-bars text-xl"></i>
-            </button>
-
-        </div>
+        
     </nav>
 
+    <!-- MOBILE MENU (simplified for mobile: single links, no dropdowns) -->
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="/" class="mobile-menu-link">Home</a>
+        <a href="{% url 'models' %}" class="mobile-menu-link {% if request.path|slice:':7' == '/models' %}active{% endif %}">Models</a>
+        <a href="{% url 'actors' %}" class="mobile-menu-link {% if request.path|slice:':7' == '/actors' %}active{% endif %}">Actors</a>
+        <a href="{% url 'about' %}" class="mobile-menu-link">About</a>
+        <a href="{% url 'apply' %}" class="mobile-menu-link">Apply</a>
+        <a href="{% url 'contact' %}" class="mobile-menu-link">Contact</a>
+    </div>
+
     <!-- PAGE CONTENT with top padding for fixed navbar -->
-    <div class="pt-20">
+    <div class="page-container">
         {% block content %}{% endblock %}
     </div>
 
+    <footer class="footer-panel text-black py-8 sm:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-bold">Face Modeling Agency</h2>
+                <p class="mt-3 sm:mt-4 footer-text max-w-xl text-sm sm:text-base">Leading the Eastern Cape with luxury talent representation, editorial presence, and premium booking support for models who want more than a look.</p>
+            </div>
+            <div class="space-y-3 footer-text">
+                <p class="font-semibold text-black text-sm sm:text-base">Quick Links</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="/" class="hover:text-[#F8D568] transition text-sm sm:text-base">Home</a>
+                    <a href="{% url 'about' %}" class="hover:text-[#F8D568] transition text-sm sm:text-base">About</a>
+                    <a href="{% url 'models' %}" class="hover:text-[#F8D568] transition text-sm sm:text-base">Models</a>
+                    <a href="{% url 'apply' %}" class="hover:text-[#F8D568] transition text-sm sm:text-base">Apply</a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8 sm:mt-10 border-t border-white/10 pt-4 sm:pt-6 text-xs sm:text-sm footer-text text-center">© {{ current_year|default:'2026' }} Face Modeling Agency. All rights reserved.</div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loader = document.getElementById('loader');
+        const page = document.querySelector('.page-container');
+        if (loader) {
+            setTimeout(() => {
+                loader.classList.add('fade-out');
+                document.body.classList.add('loaded');
+            }, 260);
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 1200);
+        }
+
+        // Mobile menu functionality (simplified for mobile: no dropdowns)
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+                mobileMenuBtn.classList.toggle('active');
+                document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+            });
+
+            // Close menu when clicking on regular links (mobile)
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    mobileMenuBtn.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
+
+            // Close menu when clicking outside
+            mobileMenu.addEventListener('click', function(e) {
+                if (e.target === mobileMenu) {
+                    mobileMenu.classList.remove('active');
+                    mobileMenuBtn.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+
+        const nav = document.querySelector('.site-nav');
+        const toggleNav = () => {
+            if (window.scrollY > 24) {
+                nav.classList.add('nav-scrolled');
+            } else {
+                nav.classList.remove('nav-scrolled');
+            }
+        };
+        toggleNav();
+        window.addEventListener('scroll', toggleNav, { passive: true });
+    });
+    </script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

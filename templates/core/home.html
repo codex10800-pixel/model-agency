@@ -7,11 +7,15 @@
 <style>
     /* Premium Base Styles */
     :root {
-        --primary: #ec4899;
-        --primary-dark: #db2777;
+        --primary: #D4AF37; /* Premium gold */
+        --primary-dark: #B8860B;
         --dark: #0f0f0f;
         --light: #fafafa;
         --gray: #6b7280;
+        /* Glow control vars (0 - 1) */
+        --glow-alpha-1: 0.6;
+        --glow-alpha-2: 0.76;
+        --glow-alpha-3: 0.7;
     }
     
     body {
@@ -19,33 +23,33 @@
     }
         /* MAIN TEXT */
     .hero-glow {
-        color: rgb(255, 0, 242);
+        color: rgb(255, 215, 0); /* gold */
     }
 
     /* GLOW TEXT */
     .glow-text {
         background: linear-gradient(
             270deg,
-            #ff0080,
-            #ff4d6d,
-            #ff8fab,
-            #ff0080,
-            #9000ff,
-            #7b2cbf,
-            #ff0080
+            #FFD700,
+            #FFC107,
+            #FFB300,
+            #FFD700,
+            #C59A2B,
+            #8C6A1D,
+            #FFD700
         );
         background-size: 400% 400%;
         
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
 
         animation: gradientShift 6s ease infinite, glowPulse 2.5s ease-in-out infinite;
 
         text-shadow:
-            0 0 10px rgba(255, 0, 128, 0.6),
-            0 0 20px rgba(255, 0, 0, 0.76),
-            0 0 40px rgb(111, 0, 255);
+            0 0 10px rgba(255, 215, 0, var(--glow-alpha-1)),
+            0 0 20px rgba(255, 183, 0, var(--glow-alpha-2)),
+            0 0 40px rgba(140, 107, 29, var(--glow-alpha-3));
     }
 
     /* GRADIENT ANIMATION */
@@ -59,15 +63,15 @@
     @keyframes glowPulse {
         0%, 100% {
             text-shadow:
-                0 0 10px rgba(255, 0, 128, 0.6),
-                0 0 20px rgba(255, 0, 128, 0.4),
-                0 0 40px rgba(255, 0, 128, 0.3);
+                0 0 10px rgba(255, 215, 0, calc(var(--glow-alpha-1) * 0.8)),
+                0 0 20px rgba(255, 183, 0, calc(var(--glow-alpha-2) * 0.6)),
+                0 0 40px rgba(255, 183, 0, calc(var(--glow-alpha-3) * 0.5));
         }
         50% {
             text-shadow:
-                0 0 20px rgba(255, 0, 128, 0.9),
-                0 0 40px rgba(255, 0, 128, 0.7),
-                0 0 80px rgba(255, 0, 128, 0.5);
+                0 0 20px rgba(255, 215, 0, calc(var(--glow-alpha-1) * 1.2)),
+                0 0 40px rgba(255, 183, 0, calc(var(--glow-alpha-2) * 1.1)),
+                0 0 80px rgba(255, 183, 0, calc(var(--glow-alpha-3) * 0.9));
         }
     }
     
@@ -213,6 +217,13 @@
     .particle {
         animation: particleFloat 4s ease-in-out infinite;
     }
+
+    /* Parallax helpers */
+    .parallax-bg, [data-parallax] {
+        will-change: transform;
+        transform: translate3d(0,0,0);
+    }
+    .parallax-bg { will-change: transform, opacity; }
     
     /* Pulse button - Premium */
     .premium-btn {
@@ -258,18 +269,94 @@
     
     /* Gradient text */
     .gradient-text {
-        background: linear-gradient(135deg, #ec4899, #f472b6);
+        background: linear-gradient(135deg, #D4AF37, #F6C85F);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
     
+</style>
+
+<style>
     /* Section divider */
     .section-divider {
         width: 60px;
         height: 2px;
-        background: linear-gradient(90deg, #ec4899, #f472b6);
+        background: linear-gradient(90deg, #D4AF37, #F0C85A);
         margin: 0 auto;
+    }
+
+    /* Premium gold utilities (non-metallic, luxe tone) */
+    :root {
+        --gold: #D4AF37;
+        --gold-dark: #8c6400;
+        --gold-muted: #C9A84E;
+        --gold-bg: rgb(212, 175, 55);
+        --gold-shadow: rgb(42, 31, 4);
+    }
+
+    .gold-chip {
+        background: var(--gold-bg);
+        border: 1px solid rgb(212, 175, 55);
+        color: var(--gold-dark);
+        display: inline-block;
+        padding: 0.25rem 1rem;
+        border-radius: 9999px;
+    }
+
+    .gold-btn {
+        background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+        color: #fff;
+        transition: transform .15s ease, box-shadow .15s ease;
+        box-shadow: 0 6px 18px var(--gold-shadow);
+        position: relative;
+        overflow: hidden;
+    }
+    .gold-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgb(0, 0, 0);
+        background: linear-gradient(180deg, var(--gold-dark), #9B6F11);
+    }
+
+    .gold-dot { background: var(--gold); }
+
+    .gold-gradient-line {
+        background: linear-gradient(90deg, var(--gold), #F0C85A);
+        height: 2px;
+        width: 100%;
+        display: block;
+    }
+
+    .gold-border { border-color: rgba(212,175,55,0.18); }
+    .gold-border-hover:hover { border-color: rgba(212,175,55,0.28); }
+
+    .gold-icon {
+        background: var(--gold-bg);
+        display:flex; align-items:center; justify-content:center;
+    }
+    .group:hover .gold-icon {
+        background: var(--gold);
+        color: white;
+    }
+    .group:hover .gold-icon i { color: white; }
+    .gold-icon i { color: var(--gold-dark); }
+
+    .gold-label { color: var(--gold-dark); }
+    .gold-check { background: var(--gold-bg); display:flex; align-items:center; justify-content:center; }
+    .gold-link { color: var(--gold-dark); }
+    .gold-meta { color: var(--gold-dark); font-weight:500; }
+    .gold-tag { background: var(--gold-bg); color: var(--gold-dark); padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: .75rem; display:inline-block; }
+
+    .cta-overlay-gold { background: linear-gradient(90deg, rgba(212,175,55,0.85), rgba(176,139,43,0.85)); }
+
+    .gold-contact-icon { background: var(--gold-bg); color: var(--gold-dark); display:flex; align-items:center; justify-content:center; }
+    .gold-social { transition: background .25s, color .25s; }
+    .gold-social:hover { background: var(--gold-muted); color: #fff; }
+
+    /* Apply premium gold to headings (non-glow) */
+    h1, h2 {
+        color: rgb(212, 175, 55) !important;
+        -webkit-text-fill-color: rgb(212, 175, 55) !important;
     }
 </style>
 {% endblock %}
@@ -280,9 +367,9 @@
 <section class="relative min-h-screen flex items-center overflow-hidden">
     
     <!-- Background with Ken Burns effect -->
-    <div class="absolute inset-0">
+    <div class="absolute inset-0 parallax-bg" data-parallax-speed="0.25">
         <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&h=1080&fit=crop" class="w-full h-full object-cover" style="animation: kenBurns 20s ease-in-out infinite alternate;">
-        <div class="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/60"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/60" style="mix-blend-mode: multiply;"></div>
     </div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-16 items-center">
@@ -291,15 +378,15 @@
         <div class="flex justify-center md:justify-start hero-img order-2 lg:order-1">
             <div class="relative">
                 <!-- Decorative elements -->
-                <div class="absolute -top-4 -left-4 w-24 h-24 border-t-2 border-l-2 border-pink-500 rounded-t-3xl"></div>
-                <div class="absolute -bottom-4 -right-4 w-24 h-24 border-b-2 border-r-2 border-pink-500 rounded-b-3xl"></div>
+                <div class="absolute -top-4 -left-4 w-24 h-24 border-t-2 border-l-2 gold-border rounded-t-3xl"></div>
+                <div class="absolute -bottom-4 -right-4 w-24 h-24 border-b-2 border-r-2 gold-border rounded-b-3xl"></div>
                 <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&h=800&fit=crop" class="relative rounded-2xl shadow-2xl float-animation">
             </div>
         </div>
 
         <!-- RIGHT TEXT -->
-        <div class="text-white text-center lg:text-left hero-text order-1 lg:order-2">
-            <div class="inline-block px-4 py-1 bg-pink-500/20 border border-pink-500/30 rounded-full text-pink-300 text-sm font-medium mb-6">
+        <div class="text-white text-center lg:text-left hero-text order-1 lg:order-2" data-parallax="0.6">
+            <div class="inline-block px-4 py-1 gold-chip text-sm font-medium mb-6">
                 ✨ Eastern Cape's Premier Modeling Agency
             </div>
 
@@ -315,10 +402,10 @@
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <a href="{% url 'apply' %}" 
-                   class="premium-btn bg-pink-500 px-8 py-4 rounded-xl font-semibold hover:bg-pink-600 transition shadow-lg hover:shadow-pink-500/25">
-                    Apply Now
-                </a>
+                    <a href="{% url 'apply' %}" 
+                             class="premium-btn gold-btn px-8 py-4 rounded-xl font-semibold transition shadow-lg">
+                        Apply Now
+                    </a>
                 <a href="{% url 'about' %}" 
                    class="premium-btn bg-white/10 border border-white/20 px-8 py-4 rounded-xl font-semibold hover:bg-white/20 transition">
                     Learn More
@@ -330,8 +417,8 @@
     
     <!-- Scroll indicator -->
     <div class="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <div class="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
-            <div class="w-1.5 h-3 bg-pink-500 rounded-full animate-bounce"></div>
+            <div class="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
+            <div class="w-1.5 h-3 gold-dot rounded-full animate-bounce"></div>
         </div>
     </div>
     
@@ -343,30 +430,30 @@
     <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-8">
         
         <!-- Decorative line -->
-        <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500"></div>
+            <div class="absolute top-0 left-0 w-full h-0.5 gold-gradient-line"></div>
 
         <!-- ITEM 1 -->
-        <div class="feature-box feature-1 group relative p-8 rounded-2xl bg-gray-50 hover:bg-white border border-gray-100 hover:border-pink-200 hover:shadow-xl transition-all duration-300">
-            <div class="w-14 h-14 bg-pink-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-pink-500 transition-colors">
-                <i class="fa-solid fa-graduation-cap text-2xl text-pink-600 group-hover:text-white"></i>
+        <div class="feature-box feature-1 group relative p-8 rounded-2xl bg-gray-50 hover:bg-white border border-gray-100 gold-border-hover hover:shadow-xl transition-all duration-300">
+            <div class="w-14 h-14 gold-icon rounded-xl flex items-center justify-center mb-4 transition-colors">
+                <i class="fa-solid fa-graduation-cap text-2xl"></i>
             </div>
             <p class="font-bold text-lg text-gray-900 mb-2">Model Training</p>
             <p class="text-gray-500 text-sm">Professional workshops and development programs.</p>
         </div>
 
         <!-- ITEM 2 -->
-        <div class="feature-box feature-2 group relative p-8 rounded-2xl bg-gray-50 hover:bg-white border border-gray-100 hover:border-pink-200 hover:shadow-xl transition-all duration-300">
-            <div class="w-14 h-14 bg-pink-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-pink-500 transition-colors">
-                <i class="fa-solid fa-camera-retro text-2xl text-pink-600 group-hover:text-white"></i>
+        <div class="feature-box feature-2 group relative p-8 rounded-2xl bg-gray-50 hover:bg-white border border-gray-100 gold-border-hover hover:shadow-xl transition-all duration-300">
+            <div class="w-14 h-14 gold-icon rounded-xl flex items-center justify-center mb-4 transition-colors">
+                <i class="fa-solid fa-camera-retro text-2xl"></i>
             </div>
-            <p class="font-bold text-lg text-gray-900 mb-2">Portfolio Sessions</p>
+            <p class="font-bold text-lg gold-label mb-2">Portfolio Sessions</p>
             <p class="text-gray-500 text-sm">High-quality photoshoots for your portfolio.</p>
         </div>
 
         <!-- ITEM 3 -->
-        <div class="feature-box feature-3 group relative p-8 rounded-2xl bg-gray-50 hover:bg-white border border-gray-100 hover:border-pink-200 hover:shadow-xl transition-all duration-300">
-            <div class="w-14 h-14 bg-pink-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-pink-500 transition-colors">
-                <i class="fa-solid fa-globe-africa text-2xl text-pink-600 group-hover:text-white"></i>
+        <div class="feature-box feature-3 group relative p-8 rounded-2xl bg-gray-50 hover:bg-white border border-gray-100 gold-border-hover hover:shadow-xl transition-all duration-300">
+            <div class="w-14 h-14 gold-icon rounded-xl flex items-center justify-center mb-4 transition-colors">
+                <i class="fa-solid fa-globe-africa text-2xl"></i>
             </div>
             <p class="font-bold text-lg text-gray-900 mb-2">Industry Connections</p>
             <p class="text-gray-500 text-sm">Network with top agencies across South Africa.</p>
@@ -382,7 +469,7 @@
         
         <!-- Section Header -->
         <div class="text-center mb-16">
-            <span class="text-pink-500 font-semibold text-sm tracking-wider uppercase">What We Do</span>
+            <span class="gold-label font-semibold text-sm tracking-wider uppercase">What We Do</span>
             <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-6">Building Future Stars</h2>
             <div class="section-divider"></div>
         </div>
@@ -398,8 +485,8 @@
                 <!-- Feature List -->
                 <div class="space-y-4">
                     <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                            <i class="fa-solid fa-check text-pink-500 text-sm"></i>
+                        <div class="w-8 h-8 gold-check rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fa-solid fa-check text-sm"></i>
                         </div>
                         <div>
                             <h4 class="font-semibold text-gray-900">Professional Training</h4>
@@ -408,8 +495,8 @@
                     </div>
                     
                     <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                            <i class="fa-solid fa-check text-pink-500 text-sm"></i>
+                        <div class="w-8 h-8 gold-check rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fa-solid fa-check text-sm"></i>
                         </div>
                         <div>
                             <h4 class="font-semibold text-gray-900">Portfolio Development</h4>
@@ -418,8 +505,8 @@
                     </div>
                     
                     <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                            <i class="fa-solid fa-check text-pink-500 text-sm"></i>
+                        <div class="w-8 h-8 gold-check rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fa-solid fa-check text-sm"></i>
                         </div>
                         <div>
                             <h4 class="font-semibold text-gray-900">Industry Connections</h4>
@@ -429,8 +516,8 @@
                 </div>
 
                 <!-- CTA -->
-                <a href="{% url 'about' %}" 
-                   class="inline-flex items-center gap-2 mt-8 text-pink-500 font-semibold hover:gap-4 transition-all">
+                     <a href="{% url 'about' %}" 
+                         class="inline-flex items-center gap-2 mt-8 gold-link font-semibold hover:gap-4 transition-all">
                     Learn More About Us <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
@@ -454,85 +541,81 @@
             </div>
 
         </div>
-    </div>
+        </div>
 </section>
 
-
-<!-- MODELS -->
-<section class="py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-6">
-        
-        <!-- Section Header -->
-        <div class="text-center mb-16">
-            <span class="text-pink-500 font-semibold text-sm tracking-wider uppercase">Our Talent</span>
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-6">Meet Our Models</h2>
-            <div class="section-divider"></div>
-            <p class="text-gray-500 mt-6 max-w-2xl mx-auto">Rising stars from the Eastern Cape making their mark in the fashion industry.</p>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-8">
-
-            <!-- Model 1 -->
-            <div class="model-box model-1 group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
-                <div class="relative overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop" 
-                         class="w-full h-80 object-cover group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 p-6 bg-white transform translate-y-2 group-hover:translate-y-0 transition duration-500">
-                    <h3 class="font-bold text-xl text-gray-900">Sarah M.</h3>
-                    <p class="text-pink-500 text-sm font-medium">Age 18</p>
-                    <div class="flex gap-2 mt-3 opacity-0 group-hover:opacity-100 transition duration-500 delay-100">
-                        <span class="px-3 py-1 bg-pink-100 text-pink-600 text-xs rounded-full">Runway</span>
-                        <span class="px-3 py-1 bg-purple-100 text-purple-600 text-xs rounded-full">Editorial</span>
-                    </div>
-                </div>
+    <!-- CARDS / QUICK LINKS -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-10">
+                <span class="gold-label font-semibold text-sm tracking-wider uppercase">Explore</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-3">
+                    Browse Our Talent & Apply
+                </h2>
+                <p class="text-gray-500 mt-2">Browse our talent, or start your application today.</p>
             </div>
 
-            <!-- Model 2 -->
-            <div class="model-box model-2 group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
-                <div class="relative overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=500&fit=crop" 
-                         class="w-full h-80 object-cover group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 p-6 bg-white transform translate-y-2 group-hover:translate-y-0 transition duration-500">
-                    <h3 class="font-bold text-xl text-gray-900">Emily K.</h3>
-                    <p class="text-pink-500 text-sm font-medium">Age 19</p>
-                    <div class="flex gap-2 mt-3 opacity-0 group-hover:opacity-100 transition duration-500 delay-100">
-                        <span class="px-3 py-1 bg-pink-100 text-pink-600 text-xs rounded-full">Commercial</span>
-                        <span class="px-3 py-1 bg-purple-100 text-purple-600 text-xs rounded-full">Print</span>
-                    </div>
-                </div>
+            <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+
+                <!-- MODELS CARD -->
+                <article class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2 bg-white">
+                    <a href="{% url 'models' %}" class="block" aria-label="View Models">
+                        <div class="w-full h-56 bg-gray-100 overflow-hidden">
+                            <img src="{% static 'images/2.png' %}" alt="Models" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-semibold text-gray-900">Models</h4>
+                            <p class="text-gray-500 mt-2">Explore our diverse roster of talent across categories and portfolios.</p>
+                            <div class="mt-4">
+                                <span class="inline-flex items-center gap-2 text-sm font-semibold gold-link">
+                                    View models <i class="fa-solid fa-arrow-right text-xs"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- ACTORS CARD -->
+                <article class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2 bg-white">
+                    <a href="{% url 'actors' %}" class="block" aria-label="View Actors">
+                        <div class="w-full h-56 bg-gray-100 overflow-hidden">
+                            <img src="{% static 'images/1.png' %}" alt="Actors" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-semibold text-gray-900">Actors</h4>
+                            <p class="text-gray-500 mt-2">Professional actors available for film, TV, and theatre productions.</p>
+                            <div class="mt-4">
+                                <span class="inline-flex items-center gap-2 text-sm font-semibold gold-link">
+                                    View actors <i class="fa-solid fa-arrow-right text-xs"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- APPLY CARD -->
+                <article class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2 bg-gradient-to-b from-yellow-50 to-white">
+                    <a href="{% url 'apply' %}" class="block" aria-label="Apply">
+                        <div class="w-full h-56 bg-gradient-to-br from-yellow-200 via-yellow-100 to-white overflow-hidden flex items-center justify-center">
+                            <img src="{% static 'images/model2.jpg' %}" alt="Apply" class="w-full h-full object-cover object-center opacity-90 transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-semibold text-gray-900">Apply</h4>
+                            <p class="text-gray-500 mt-2">Start your professional journey with FACE — submit your profile and portfolio.</p>
+                            <div class="mt-4">
+                                <span class="inline-flex items-center gap-2 text-sm font-semibold gold-link">
+                                    Apply now <i class="fa-solid fa-arrow-right text-xs"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
             </div>
-
-            <!-- Model 3 -->
-            <div class="model-box model-3 group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
-                <div class="relative overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1529626455594-4ff08002cfd7?w=400&h=500&fit=crop" 
-                         class="w-full h-80 object-cover group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 p-6 bg-white transform translate-y-2 group-hover:translate-y-0 transition duration-500">
-                    <h3 class="font-bold text-xl text-gray-900">Amara J.</h3>
-                    <p class="text-pink-500 text-sm font-medium">Age 17</p>
-                    <div class="flex gap-2 mt-3 opacity-0 group-hover:opacity-100 transition duration-500 delay-100">
-                        <span class="px-3 py-1 bg-pink-100 text-pink-600 text-xs rounded-full">Fashion</span>
-                        <span class="px-3 py-1 bg-purple-100 text-purple-600 text-xs rounded-full">Lifestyle</span>
-                    </div>
-                </div>
-            </div>
-
         </div>
+    </section>
 
-        <div class="text-center mt-12">
-            <a href="{% url 'models' %}" 
-               class="premium-btn inline-flex items-center gap-2 bg-gray-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition shadow-lg">
-                View All Models <i class="fa-solid fa-arrow-right"></i>
-            </a>
-        </div>
-    </div>
-</section>
+
 
 
 <!-- CTA -->
@@ -540,7 +623,7 @@
     
     <div class="absolute inset-0">
         <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&h=800&fit=crop" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-r from-pink-600/90 to-purple-600/90"></div>
+        <div class="absolute inset-0 cta-overlay-gold"></div>
     </div>
     
     <!-- Animated particles -->
@@ -562,8 +645,8 @@
         </p>
 
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="{% url 'apply' %}" 
-               class="premium-btn bg-white text-pink-600 px-10 py-4 rounded-xl font-bold hover:bg-gray-100 transition shadow-xl">
+                <a href="{% url 'apply' %}" 
+                    class="premium-btn bg-white gold-meta px-10 py-4 rounded-xl font-bold hover:bg-gray-100 transition shadow-xl">
                 Apply Now
             </a>
             <a href="{% url 'contact' %}" 
@@ -579,13 +662,13 @@
 <section class="relative py-24 text-white overflow-hidden">
     
     <div class="absolute inset-0">
-        <img src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=1920&h=600&fit=crop" class="w-full h-full object-cover">
+        <img src="{% static 'images/background.png' %}" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-gray-900/90"></div>
     </div>
 
     <div class="relative z-10 animate-on-scroll fade-in max-w-4xl mx-auto px-6">
-        <div class="text-center mb-12">
-            <span class="text-pink-400 font-semibold text-sm tracking-wider uppercase">Get In Touch</span>
+            <div class="text-center mb-12">
+            <span class="gold-label font-semibold text-sm tracking-wider uppercase">Get In Touch</span>
             <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-6">Contact Face Modeling</h2>
             <div class="section-divider"></div>
         </div>
@@ -594,8 +677,8 @@
             
             <!-- Phone -->
             <div class="p-6">
-                <div class="w-14 h-14 bg-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-phone text-pink-400 text-xl"></i>
+                <div class="w-14 h-14 gold-contact-icon rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-phone text-xl"></i>
                 </div>
                 <h3 class="font-semibold text-lg mb-2">Phone</h3>
                 <p class="text-gray-300">064 853 8075</p>
@@ -603,8 +686,8 @@
             
             <!-- Email -->
             <div class="p-6">
-                <div class="w-14 h-14 bg-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-envelope text-pink-400 text-xl"></i>
+                <div class="w-14 h-14 gold-contact-icon rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-envelope text-xl"></i>
                 </div>
                 <h3 class="font-semibold text-lg mb-2">Email</h3>
                 <p class="text-gray-300">ndiyisilejoja@gmail.com</p>
@@ -612,8 +695,8 @@
             
             <!-- Location -->
             <div class="p-6">
-                <div class="w-14 h-14 bg-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-location-dot text-pink-400 text-xl"></i>
+                <div class="w-14 h-14 gold-contact-icon rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-location-dot text-xl"></i>
                 </div>
                 <h3 class="font-semibold text-lg mb-2">Location</h3>
                 <p class="text-gray-300">Eastern Cape, South Africa</p>
@@ -623,13 +706,13 @@
 
         <!-- SOCIAL -->
         <div class="flex justify-center gap-6 mt-12">
-            <a href="#" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-pink-500 transition">
+            <a href="#" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center gold-social transition">
                 <i class="fa-brands fa-instagram text-lg"></i>
             </a>
-            <a href="#" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-pink-500 transition">
+            <a href="#" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center gold-social transition">
                 <i class="fa-brands fa-facebook-f text-lg"></i>
             </a>
-            <a href="#" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-pink-500 transition">
+            <a href="#" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center gold-social transition">
                 <i class="fa-brands fa-twitter text-lg"></i>
             </a>
         </div>
@@ -678,6 +761,35 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.animate-on-scroll, .slide-up, .slide-left, .slide-right, .scale-up, .fade-in, .feature-box, .model-box').forEach(el => {
         observer.observe(el);
     });
+    
+    /* Parallax and dynamic glow on scroll */
+    const parallaxEls = document.querySelectorAll('[data-parallax-speed], [data-parallax]');
+    const throttle = (fn, wait=16) => {
+        let last = 0; return (...args)=>{ const now = Date.now(); if(now-last>wait){ last = now; fn(...args); } }
+    };
+
+    function updateParallax(){
+        const scrollY = window.scrollY || window.pageYOffset;
+        parallaxEls.forEach(el =>{
+            const speed = parseFloat(el.dataset.parallaxSpeed || el.dataset.parallax) || 0.5;
+            const translate = (scrollY * speed) * -0.15; // subtle
+            el.style.transform = `translate3d(0, ${translate}px, 0)`;
+        });
+
+        // dynamic glow intensity based on scroll position
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight>0 ? (scrollY / docHeight) : 0;
+        // map pct to reasonable glow alpha ranges
+        const a1 = 0.4 + pct * 0.6; // 0.4..1.0
+        const a2 = 0.5 + pct * 0.5; // 0.5..1.0
+        const a3 = 0.3 + pct * 0.7; // 0.3..1.0
+        document.documentElement.style.setProperty('--glow-alpha-1', a1.toFixed(2));
+        document.documentElement.style.setProperty('--glow-alpha-2', a2.toFixed(2));
+        document.documentElement.style.setProperty('--glow-alpha-3', a3.toFixed(2));
+    }
+
+    window.addEventListener('scroll', throttle(updateParallax));
+    updateParallax();
     
 });
 </script>

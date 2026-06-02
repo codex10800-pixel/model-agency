@@ -1,9 +1,18 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}{{ model.name }} - Face Modeling Agency{% endblock %}
 
 {% block extra_css %}
 <style>
+    :root {
+        --gold: #D4AF37;
+        --gold-dark: #8c6400;
+        --gold-muted: #C9A84E;
+        --gold-bg: rgb(212, 175, 55);
+        --gold-shadow: rgb(42, 31, 4);
+    }
+
     .animate-on-scroll {
         opacity: 0;
         transform: translateY(40px);
@@ -13,8 +22,83 @@
         opacity: 1;
         transform: translateY(0);
     }
+
+    .slide-left {
+        opacity: 0;
+        transform: translateX(-60px);
+    }
+    .slide-left.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .slide-right {
+        opacity: 0;
+        transform: translateX(60px);
+    }
+    .slide-right.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .slide-up {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+    .slide-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .fade-in {
+        opacity: 0;
+    }
+    .fade-in.visible {
+        opacity: 1;
+    }
+
+    .scale-up {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    .scale-up.visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .delay-1 {
+        transition-delay: 0.08s;
+    }
+    .delay-2 {
+        transition-delay: 0.16s;
+    }
+    .delay-3 {
+        transition-delay: 0.24s;
+    }
+    .delay-4 {
+        transition-delay: 0.32s;
+    }
+    .delay-5 {
+        transition-delay: 0.4s;
+    }
+
+    .parallax-bg {
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .ken-burns {
+        animation: kenBurns 20s ease-in-out infinite;
+    }
+    @keyframes kenBurns {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+    }
+
     .gradient-text {
-        background: linear-gradient(135deg, #ec4899, #f472b6);
+        background: linear-gradient(135deg, var(--gold), #f5d547);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -22,37 +106,145 @@
     .section-divider {
         width: 60px;
         height: 2px;
-        background: linear-gradient(90deg, #ec4899, #f472b6);
+        background: linear-gradient(90deg, var(--gold), #f5d547);
+        margin: 0 auto;
     }
-    .premium-btn {
+    .gold-btn {
+        background-color: var(--gold);
+        color: var(--gold-shadow);
+        font-weight: 700;
+        transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
-        transition: all 0.3s ease;
     }
-    .premium-btn::before {
+    .gold-btn::before {
         content: '';
         position: absolute;
         top: 0;
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
         transition: left 0.5s ease;
     }
-    .premium-btn:hover::before {
+    .gold-btn:hover {
+        background-color: var(--gold-dark);
+        box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+        transform: translateY(-2px);
+    }
+    .gold-btn:hover::before {
         left: 100%;
+    }
+
+    .detail-panel {
+        background: white;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 0.75rem;
+        padding: 2rem;
+        transition: all 0.6s ease;
+    }
+    .detail-panel:hover {
+        border-color: var(--gold);
+        box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
+    }
+
+    .gallery-card {
+        background: white;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 0.75rem;
+        overflow: hidden;
+        transition: all 0.6s ease;
+        cursor: pointer;
+    }
+    .gallery-card:hover {
+        border-color: var(--gold);
+        box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
+        transform: translateY(-4px);
+    }
+    .gallery-card img {
+        transition: transform 0.7s ease;
+    }
+    .gallery-card:hover img {
+        transform: scale(1.05);
+    }
+
+    .related-card {
+        background: white;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 0.75rem;
+        overflow: hidden;
+        transition: all 0.6s ease;
+    }
+    .related-card:hover {
+        border-color: var(--gold);
+        box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
+        transform: translateY(-6px);
+    }
+    .related-card img {
+        transition: transform 0.7s ease;
+    }
+    .related-card:hover img {
+        transform: scale(1.05);
+    }
+
+    .info-pill {
+        background: linear-gradient(135deg, var(--gold), var(--gold-muted));
+        color: var(--gold-shadow);
+        font-weight: 600;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        transition: all 0.3s ease;
+    }
+    .info-pill:hover {
+        box-shadow: 0 8px 16px rgba(212, 175, 55, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .about-panel {
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.04));
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        border-radius: 0.75rem;
+        padding: 2rem;
+    }
+    .about-panel h2 {
+        color: var(--gold);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 1rem;
+    }
+    .about-panel p {
+        color: #333;
+        line-height: 1.8;
+    }
+
+    .button-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    @media (max-width: 640px) {
+        .button-group {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .cta-overlay-gold {
+        background: linear-gradient(135deg, rgba(42, 31, 4, 0.75) 0%, rgba(42, 31, 4, 0.85) 100%);
+        backdrop-filter: blur(8px);
+        position: relative;
     }
 </style>
 {% endblock %}
 
 {% block content %}
+
 <!-- Breadcrumb -->
-<section class="pt-28 pb-4 bg-gray-50">
+<section class="pt-28 pb-6 bg-gradient-to-b from-white to-gray-50">
     <div class="max-w-7xl mx-auto px-6">
-        <nav class="flex items-center gap-2 text-sm">
-            <a href="{% url 'home' %}" class="text-gray-500 hover:text-pink-500 transition">Home</a>
+        <nav class="flex flex-wrap items-center gap-2 text-sm">
+            <a href="{% url 'home' %}" class="text-gray-600 hover:text-yellow-600 transition duration-300">Home</a>
             <span class="text-gray-400">/</span>
-            <a href="{% url 'models' %}" class="text-gray-500 hover:text-pink-500 transition">Models</a>
+            <a href="{% url 'models' %}" class="text-gray-600 hover:text-yellow-600 transition duration-300">Models</a>
             <span class="text-gray-400">/</span>
             <span class="text-gray-900 font-medium">{{ model.name }}</span>
         </nav>
@@ -62,93 +254,56 @@
 <!-- Model Profile -->
 <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-6">
-        <div class="grid lg:grid-cols-2 gap-12">
-            <!-- Profile Image -->
-            <div class="relative animate-on-scroll">
-                <div class="aspect-[3/4] rounded-3xl overflow-hidden shadow-xl">
+        <div class="grid lg:grid-cols-2 gap-12 items-start">
+            <div class="detail-panel scale-up animate-on-scroll overflow-hidden">
+                <div class="relative aspect-[3/4] overflow-hidden bg-gray-200">
                     {% if model.profile_image %}
-                    <img src="{{ model.profile_image.url }}" alt="{{ model.name }}" class="w-full h-full object-cover">
+                    <img src="{{ model.profile_image.url }}" alt="{{ model.name }}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
                     {% else %}
-                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                        <i class="fa-solid fa-user text-6xl text-gray-300"></i>
+                    <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                        <i class="fa-solid fa-user text-6xl text-gray-600"></i>
+                    </div>
+                    {% endif %}
+                    {% if model.is_featured %}
+                    <div class="absolute top-6 right-6">
+                        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-semibold shadow-lg">
+                            <i class="fa-solid fa-star"></i> Featured
+                        </span>
                     </div>
                     {% endif %}
                 </div>
-                {% if model.is_featured %}
-                <div class="absolute top-6 right-6">
-                    <span class="px-4 py-2 bg-pink-500 text-white font-semibold rounded-full">Featured</span>
-                </div>
-                {% endif %}
             </div>
 
-            <!-- Model Info -->
-            <div class="animate-on-scroll">
-                <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ model.name }}</h1>
-                
-                <div class="flex flex-wrap gap-4 mb-8">
-                    <div class="flex items-center gap-2 text-gray-600">
-                        <i class="fa-solid fa-calendar text-pink-500"></i>
-                        <span>{{ model.age }} years old</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-gray-600">
-                        <i class="fa-solid fa-ruler-vertical text-pink-500"></i>
-                        <span>{{ model.height }}</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-gray-600">
-                        <i class="fa-solid fa-location-dot text-pink-500"></i>
-                        <span>{{ model.location }}</span>
+            <div class="space-y-6">
+                <div class="slide-right animate-on-scroll">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">{{ model.name }}</h1>
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="info-pill px-4 py-2 rounded-full text-sm animate-on-scroll delay-1">
+                            {{ model.get_category_display }}
+                        </span>
+                        <span class="info-pill px-4 py-2 rounded-full text-sm animate-on-scroll delay-2">
+                            {{ model.age }} years old
+                        </span>
+                        <span class="info-pill px-4 py-2 rounded-full text-sm animate-on-scroll delay-3">
+                            {{ model.height }}
+                        </span>
+                        <span class="info-pill px-4 py-2 rounded-full text-sm animate-on-scroll delay-4">
+                            {{ model.location }}
+                        </span>
                     </div>
                 </div>
 
-                <!-- Bio -->
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">About</h2>
-                    <p class="text-gray-600 leading-relaxed">{{ model.bio }}</p>
+                <div class="about-panel animate-on-scroll delay-2">
+                    <h2 class="text-xl">About</h2>
+                    <p class="text-gray-700 leading-relaxed">{{ model.bio }}</p>
                 </div>
 
-                <!-- Actions -->
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="{% url 'hire' %}" class="premium-btn flex-1 px-6 py-4 bg-pink-500 text-white font-bold rounded-xl text-center hover:bg-pink-600 transition shadow-lg">
-                        Book This Model
+                <div class="button-group animate-on-scroll delay-3">
+                    <a href="{% url 'hire' %}" class="gold-btn flex items-center justify-center gap-2 px-6 py-4 rounded-lg transition shadow-lg hover:shadow-xl">
+                        <i class="fa-solid fa-calendar"></i> Book This Model
                     </a>
-                    <a href="{% url 'contact' %}" class="premium-btn flex-1 px-6 py-4 border-2 border-pink-500 text-pink-500 font-bold rounded-xl text-center hover:bg-pink-500 hover:text-white transition">
-                        Contact Us
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    function handleScroll() {
-        const triggerBottom = window.innerHeight * 0.85;
-        document.querySelectorAll('.animate-on-scroll').forEach(el => {
-            const box = el.getBoundingClientRect();
-            if (box.top < triggerBottom) {
-                el.classList.add('visible');
-            }
-        });
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.15 });
-    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
-});
-</script>
-{% endblock %}
-
-{% endblock %}
-                        Contact Agency
+                    <a href="{% url 'contact' %}" class="gold-btn flex items-center justify-center gap-2 px-6 py-4 rounded-lg transition shadow-lg hover:shadow-xl">
+                        <i class="fa-solid fa-envelope"></i> Contact Us
                     </a>
                 </div>
             </div>
@@ -157,65 +312,108 @@ document.addEventListener('DOMContentLoaded', function() {
 </section>
 
 <!-- Portfolio Gallery -->
-<section class="py-24 bg-gray-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-12">
-            <h2 class="font-playfair text-4xl font-bold text-white mb-4">
-                Portfolio
-            </h2>
-            <p class="text-gray-400">Professional shots and previous work</p>
+            <h2 class="text-4xl font-bold text-gray-900 mb-2 slide-up animate-on-scroll">Portfolio</h2>
+            <p class="text-gray-600 mb-4 slide-up animate-on-scroll delay-1">Professional shots and previous work</p>
+            <div class="section-divider slide-up animate-on-scroll delay-2"></div>
         </div>
 
         {% if portfolio_images %}
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {% for portfolio in portfolio_images %}
-            <div class="aspect-square rounded-xl overflow-hidden bg-gray-800 hover-lift cursor-pointer">
-                <img src="{{ portfolio.image.url }}" alt="Portfolio" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+            <div class="gallery-card aspect-square scale-up animate-on-scroll">
+                <img src="{{ portfolio.image.url }}" alt="Portfolio" class="w-full h-full object-cover">
             </div>
             {% endfor %}
         </div>
         {% else %}
-        <div class="text-center py-12">
-            <p class="text-gray-400">No portfolio images available yet.</p>
+        <div class="text-center py-12 scale-up animate-on-scroll">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-image text-2xl text-white"></i>
+            </div>
+            <p class="text-gray-600 text-lg">No portfolio images available yet.</p>
         </div>
         {% endif %}
     </div>
 </section>
 
 <!-- Related Models -->
-<section class="py-24 bg-gray-950">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-12">
-            <h2 class="font-playfair text-4xl font-bold text-white mb-4">
-                Other <span class="text-gradient-gold">Models</span>
-            </h2>
+            <h2 class="text-4xl font-bold text-gray-900 mb-2 slide-up animate-on-scroll">Other <span class="gradient-text">Models</span></h2>
+            <div class="section-divider slide-up animate-on-scroll delay-1"></div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {% for related in related_models %}
-            <a href="{% url 'model_detail' related.pk %}" class="group relative overflow-hidden rounded-xl bg-gray-800 hover-lift">
-                <div class="aspect-[3/4] overflow-hidden">
+            <a href="{% url 'model_detail' related.pk %}" class="related-card scale-up animate-on-scroll overflow-hidden group">
+                <div class="aspect-[3/4] overflow-hidden bg-gray-200">
                     {% if related.profile_image %}
-                    <img src="{{ related.profile_image.url }}" alt="{{ related.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <img src="{{ related.profile_image.url }}" alt="{{ related.name }}" class="w-full h-full object-cover">
                     {% else %}
-                    <div class="w-full h-full bg-gray-700 flex items-center justify-center">
-                        <svg class="w-12 h-12 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        </svg>
+                    <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                        <i class="fa-solid fa-user text-4xl text-gray-600"></i>
                     </div>
                     {% endif %}
                 </div>
-                <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                    <h3 class="font-playfair text-lg font-bold text-white">{{ related.name }}</h3>
-                    <p class="text-gray-300 text-sm">{{ related.age }} • {{ related.height }}</p>
+                <div class="p-4 bg-white border-t border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-900">{{ related.name }}</h3>
+                    <p class="text-gray-600 text-sm">{{ related.age }} • {{ related.height }}</p>
                 </div>
             </a>
             {% empty %}
-            <div class="col-span-full text-center py-8">
-                <p class="text-gray-400">No other models available.</p>
+            <div class="col-span-full text-center py-12 scale-up animate-on-scroll">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-users text-2xl text-white"></i>
+                </div>
+                <p class="text-gray-600 text-lg">No other models available.</p>
             </div>
             {% endfor %}
         </div>
     </div>
 </section>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Scroll animation observer
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.animate-on-scroll, .slide-up, .slide-left, .slide-right, .fade-in, .scale-up').forEach(el => {
+        revealObserver.observe(el);
+    });
+
+    // Parallax scroll handler
+    let parallaxTicking = false;
+    function updateParallax() {
+        const scrolled = window.pageYOffset;
+        document.querySelectorAll('[data-parallax-speed]').forEach(el => {
+            const speed = parseFloat(el.getAttribute('data-parallax-speed'));
+            el.style.backgroundPosition = `center ${scrolled * speed}px`;
+        });
+        parallaxTicking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+        if (!parallaxTicking) {
+            window.requestAnimationFrame(updateParallax);
+            parallaxTicking = true;
+        }
+    }, { passive: true });
+
+    updateParallax();
+});
+</script>
+{% endblock %}
+
 {% endblock %}

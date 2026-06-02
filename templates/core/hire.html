@@ -1,9 +1,17 @@
-{% extends 'core/base.html' %}
+﻿{% extends 'core/base.html' %}
 
 {% block title %}Hire Talent - Face Modeling Agency{% endblock %}
 
 {% block extra_css %}
 <style>
+    :root {
+        --gold: #D4AF37;
+        --gold-dark: #8c6400;
+        --gold-muted: #C9A84E;
+        --gold-bg: rgb(212, 175, 55);
+        --gold-shadow: rgb(42, 31, 4);
+    }
+
     .animate-on-scroll {
         opacity: 0;
         transform: translateY(40px);
@@ -13,8 +21,83 @@
         opacity: 1;
         transform: translateY(0);
     }
+
+    .slide-left {
+        opacity: 0;
+        transform: translateX(-60px);
+    }
+    .slide-left.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .slide-right {
+        opacity: 0;
+        transform: translateX(60px);
+    }
+    .slide-right.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .slide-up {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+    .slide-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .fade-in {
+        opacity: 0;
+    }
+    .fade-in.visible {
+        opacity: 1;
+    }
+
+    .scale-up {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    .scale-up.visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .delay-1 {
+        transition-delay: 0.08s;
+    }
+    .delay-2 {
+        transition-delay: 0.16s;
+    }
+    .delay-3 {
+        transition-delay: 0.24s;
+    }
+    .delay-4 {
+        transition-delay: 0.32s;
+    }
+    .delay-5 {
+        transition-delay: 0.4s;
+    }
+
+    .parallax-bg {
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .ken-burns {
+        animation: kenBurns 20s ease-in-out infinite;
+    }
+    @keyframes kenBurns {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+    }
+
     .gradient-text {
-        background: linear-gradient(135deg, #ec4899, #f472b6);
+        background: linear-gradient(135deg, var(--gold), #f5d547);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -22,132 +105,180 @@
     .section-divider {
         width: 60px;
         height: 2px;
-        background: linear-gradient(90deg, #ec4899, #f472b6);
+        background: linear-gradient(90deg, var(--gold), #f5d547);
         margin: 0 auto;
     }
-    .premium-btn {
+    .gold-btn {
+        background-color: var(--gold);
+        color: var(--gold-shadow);
+        font-weight: 700;
+        transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
-        transition: all 0.3s ease;
     }
-    .premium-btn::before {
+    .gold-btn::before {
         content: '';
         position: absolute;
         top: 0;
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
         transition: left 0.5s ease;
     }
-    .premium-btn:hover::before {
+    .gold-btn:hover {
+        background-color: var(--gold-dark);
+        box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+        transform: translateY(-2px);
+    }
+    .gold-btn:hover::before {
         left: 100%;
+    }
+
+    .service-card {
+        background: white;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 0.75rem;
+        padding: 2rem;
+        transition: all 0.6s ease;
+        cursor: pointer;
+    }
+    .service-card:hover {
+        border-color: var(--gold);
+        box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
+        transform: translateY(-4px);
+    }
+    .service-icon {
+        width: 3.5rem;
+        height: 3.5rem;
+        background: linear-gradient(135deg, var(--gold), var(--gold-muted));
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        color: var(--gold-shadow);
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+    }
+    .service-card:hover .service-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+    .service-card h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--gold-shadow);
+        margin-bottom: 0.75rem;
+    }
+    .service-card p {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    .cta-overlay-gold {
+        background: linear-gradient(135deg, rgba(42, 31, 4, 0.75) 0%, rgba(42, 31, 4, 0.85) 100%);
+        backdrop-filter: blur(8px);
+        position: relative;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative pt-32 pb-20 overflow-hidden">
-    <div class="absolute inset-0">
-        <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&h=600&fit=crop" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gray-900/80"></div>
-    </div>
+<section class="relative pt-32 pb-20 overflow-hidden parallax-bg" data-parallax-speed="0.22" style="background-image: url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&h=600&fit=crop')">
+    <div class="absolute inset-0 bg-gradient-to-b from-gray-900/70 via-gray-900/80 to-gray-900/90"></div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-6 text-center">
-        <span class="inline-block px-4 py-1 bg-pink-500/20 border border-pink-500/30 rounded-full text-pink-300 text-sm font-medium mb-6">
+        <span class="inline-block px-4 py-1 bg-yellow-600/30 border border-yellow-500/40 rounded-full text-yellow-200 text-sm font-medium mb-6 slide-up animate-on-scroll">
             For Brands
         </span>
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 slide-up animate-on-scroll delay-1">
             Hire <span class="gradient-text">Talent</span>
         </h1>
-        <div class="section-divider"></div>
-        <p class="text-gray-300 text-lg mt-6 max-w-2xl mx-auto">
+        <div class="section-divider mx-auto slide-up animate-on-scroll delay-2"></div>
+        <p class="text-gray-200 text-lg mt-6 max-w-2xl mx-auto slide-up animate-on-scroll delay-3">
             Find the perfect models for your brand, campaign, or event. Professional talent ready for your projects.
         </p>
     </div>
 </section>
 
 <!-- Services Offered -->
-<section class="py-24 bg-white">
+<section class="py-24 bg-gradient-to-b from-gray-50 to-white">
     <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
-            <span class="text-pink-500 font-semibold text-sm tracking-wider uppercase">What We Offer</span>
-            <h2 class="text-4xl font-bold text-gray-900 mt-4 mb-6">Our Services</h2>
-            <div class="section-divider"></div>
+            <span class="text-yellow-600 font-semibold text-sm tracking-wider uppercase slide-up animate-on-scroll">What We Offer</span>
+            <h2 class="text-4xl font-bold text-gray-900 mt-4 mb-6 slide-up animate-on-scroll delay-1">Our Services</h2>
+            <div class="section-divider slide-up animate-on-scroll delay-2"></div>
         </div>
 
         <div class="grid md:grid-cols-3 gap-8">
             <!-- Service 1 -->
-            <div class="bg-gray-50 p-8 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300 animate-on-scroll">
-                <div class="w-14 h-14 bg-pink-100 rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fa-solid fa-walking text-pink-500 text-2xl"></i>
+            <div class="service-card scale-up animate-on-scroll delay-1">
+                <div class="service-icon">
+                    <i class="fa-solid fa-walking"></i>
                 </div>
-                <h3 class="font-bold text-xl text-gray-900 mb-3">Fashion Shows</h3>
-                <p class="text-gray-500">Professional models for runway shows, fashion weeks, and designer presentations.</p>
+                <h3>Fashion Shows</h3>
+                <p>Professional models for runway shows, fashion weeks, and designer presentations.</p>
             </div>
 
             <!-- Service 2 -->
-            <div class="bg-gray-50 p-8 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300 animate-on-scroll">
-                <div class="w-14 h-14 bg-pink-100 rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fa-solid fa-bullhorn text-pink-500 text-2xl"></i>
+            <div class="service-card scale-up animate-on-scroll delay-2">
+                <div class="service-icon">
+                    <i class="fa-solid fa-bullhorn"></i>
                 </div>
-                <h3 class="font-bold text-xl text-gray-900 mb-3">Commercial Campaigns</h3>
-                <p class="text-gray-500">Brand ambassadors for advertising campaigns, TV commercials, and digital marketing.</p>
+                <h3>Commercial Campaigns</h3>
+                <p>Brand ambassadors for advertising campaigns, TV commercials, and digital marketing.</p>
             </div>
 
             <!-- Service 3 -->
-            <div class="bg-gray-50 p-8 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300 animate-on-scroll">
-                <div class="w-14 h-14 bg-pink-100 rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fa-solid fa-camera text-pink-500 text-2xl"></i>
+            <div class="service-card scale-up animate-on-scroll delay-3">
+                <div class="service-icon">
+                    <i class="fa-solid fa-camera"></i>
                 </div>
-                <h3 class="font-bold text-xl text-gray-900 mb-3">Editorial Shoots</h3>
-                <p class="text-gray-500">High-quality models for magazine editorials, catalog shoots, and artistic projects.</p>
+                <h3>Editorial Shoots</h3>
+                <p>High-quality models for magazine editorials, catalog shoots, and artistic projects.</p>
             </div>
 
             <!-- Service 4 -->
-            <div class="bg-gray-50 p-8 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300 animate-on-scroll">
-                <div class="w-14 h-14 bg-pink-100 rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fa-solid fa-video text-pink-500 text-2xl"></i>
+            <div class="service-card scale-up animate-on-scroll delay-1">
+                <div class="service-icon">
+                    <i class="fa-solid fa-video"></i>
                 </div>
-                <h3 class="font-bold text-xl text-gray-900 mb-3">Film & TV</h3>
-                <p class="text-gray-500">Talented actors and models for film productions, TV shows, and commercials.</p>
+                <h3>Film & TV</h3>
+                <p>Talented actors and models for film productions, TV shows, and commercials.</p>
             </div>
 
             <!-- Service 5 -->
-            <div class="bg-gray-50 p-8 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300 animate-on-scroll">
-                <div class="w-14 h-14 bg-pink-100 rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fa-solid fa-store text-pink-500 text-2xl"></i>
+            <div class="service-card scale-up animate-on-scroll delay-2">
+                <div class="service-icon">
+                    <i class="fa-solid fa-store"></i>
                 </div>
-                <h3 class="font-bold text-xl text-gray-900 mb-3">Retail & Events</h3>
-                <p class="text-gray-500">Promotional models for retail launches, product demonstrations, and corporate events.</p>
+                <h3>Retail & Events</h3>
+                <p>Promotional models for retail launches, product demonstrations, and corporate events.</p>
             </div>
 
             <!-- Service 6 -->
-            <div class="bg-gray-50 p-8 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300 animate-on-scroll">
-                <div class="w-14 h-14 bg-pink-100 rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fa-solid fa-globe text-pink-500 text-2xl"></i>
+            <div class="service-card scale-up animate-on-scroll delay-3">
+                <div class="service-icon">
+                    <i class="fa-solid fa-globe"></i>
                 </div>
-                <h3 class="font-bold text-xl text-gray-900 mb-3">International Work</h3>
-                <p class="text-gray-500">Models available for international bookings, travel assignments, and overseas campaigns.</p>
+                <h3>International Work</h3>
+                <p>Models available for international bookings, travel assignments, and overseas campaigns.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- CTA -->
-<section class="relative py-24 text-white overflow-hidden">
-    <div class="absolute inset-0">
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&h=600&fit=crop" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-r from-pink-600/90 to-purple-600/90"></div>
-    </div>
+<section class="relative py-24 text-white overflow-hidden parallax-bg" data-parallax-speed="0.15" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&h=600&fit=crop')">
+    <div class="absolute inset-0 cta-overlay-gold"></div>
 
-    <div class="relative z-10 max-w-3xl mx-auto px-6 text-center animate-on-scroll">
-        <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Book Talent?</h2>
-        <p class="text-white/80 text-lg mb-8 max-w-xl mx-auto">
+    <div class="relative z-10 max-w-3xl mx-auto px-6 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6 slide-up animate-on-scroll">Ready to Book Talent?</h2>
+        <p class="text-gray-100 text-lg mb-8 max-w-xl mx-auto slide-up animate-on-scroll delay-1">
             Contact us today to discuss your project needs and find the perfect models for your campaign.
         </p>
-        <a href="{% url 'contact' %}" class="premium-btn inline-flex items-center gap-2 bg-white text-pink-600 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition shadow-xl">
+        <a href="{% url 'contact' %}" class="gold-btn inline-flex items-center gap-2 px-8 py-4 rounded-xl transition shadow-xl hover:shadow-2xl slide-up animate-on-scroll delay-2">
             Contact Us <i class="fa-solid fa-arrow-right"></i>
         </a>
     </div>
@@ -156,26 +287,39 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    function handleScroll() {
-        const triggerBottom = window.innerHeight * 0.85;
-        document.querySelectorAll('.animate-on-scroll').forEach(el => {
-            const box = el.getBoundingClientRect();
-            if (box.top < triggerBottom) {
-                el.classList.add('visible');
-            }
-        });
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    
-    const observer = new IntersectionObserver((entries) => {
+    // Scroll animation observer
+    const revealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
             }
         });
     }, { threshold: 0.15 });
-    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+    document.querySelectorAll('.animate-on-scroll, .slide-up, .slide-left, .slide-right, .fade-in, .scale-up').forEach(el => {
+        revealObserver.observe(el);
+    });
+
+    // Parallax scroll handler
+    let parallaxTicking = false;
+    function updateParallax() {
+        const scrolled = window.pageYOffset;
+        document.querySelectorAll('[data-parallax-speed]').forEach(el => {
+            const speed = parseFloat(el.getAttribute('data-parallax-speed'));
+            el.style.backgroundPosition = `center ${scrolled * speed}px`;
+        });
+        parallaxTicking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+        if (!parallaxTicking) {
+            window.requestAnimationFrame(updateParallax);
+            parallaxTicking = true;
+        }
+    }, { passive: true });
+
+    updateParallax();
 });
 </script>
 {% endblock %}

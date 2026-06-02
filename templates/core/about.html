@@ -1,29 +1,117 @@
-{% extends 'core/base.html' %}
+﻿{% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}About Us - Face Modeling Agency{% endblock %}
+{% block extra_css %}
+<style>
+    /* Small, page-scoped premium styles for About page + animations */
+    .hero-glow { color: var(--gold); }
+    .glow-text {
+        background: linear-gradient(270deg,#FFD700,#FFC107,#FFB300,#FFD700);
+        background-size: 400% 400%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradientShift 6s ease infinite, glowPulse 2.5s ease-in-out infinite;
+        text-shadow: 0 0 10px rgba(212,175,55,0.6), 0 0 20px rgba(212,175,55,0.4);
+    }
+    @keyframes gradientShift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
+    @keyframes glowPulse { 0%,100%{filter: none} 50%{filter: none} }
+
+    .gold-chip { background: var(--gold-accent); border: 1px solid rgba(212,175,55,0.12); color: var(--gold-dark); display:inline-block; padding:0.35rem 1rem; border-radius:9999px; }
+    .gold-label { color: var(--gold-dark); }
+    .gold-btn { background: linear-gradient(180deg, var(--gold), var(--gold-dark)); color: #111; display:inline-flex; align-items:center; gap:0.5rem; padding:0.75rem 1.25rem; border-radius:12px; font-weight:700; box-shadow:0 10px 30px rgba(212,175,55,0.12); text-decoration:none; }
+    .premium-btn { position:relative; overflow:hidden; }
+    .premium-btn::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent); transition:left .45s ease; }
+    .premium-btn:hover::before { left:100%; }
+
+    .gold-icon { color: var(--gold-dark); font-size:1.6rem; display:inline-block; }
+    .gold-meta { color: var(--gold-dark); font-weight:600; }
+
+    /* Scroll reveal helpers */
+    .animate-on-scroll { opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease; }
+    .animate-on-scroll.visible { opacity:1; transform:translateY(0); }
+
+    .slide-up { opacity:0; transform:translateY(40px); transition:opacity .6s ease, transform .6s ease; }
+    .slide-up.visible { opacity:1; transform:translateY(0); }
+    .slide-left { opacity:0; transform:translateX(-40px); transition:opacity .6s ease, transform .6s ease; }
+    .slide-left.visible { opacity:1; transform:translateX(0); }
+    .slide-right { opacity:0; transform:translateX(40px); transition:opacity .6s ease, transform .6s ease; }
+    .slide-right.visible { opacity:1; transform:translateX(0); }
+    .fade-in { opacity:0; transform:translateY(20px); transition:opacity .6s ease, transform .6s ease; }
+    .fade-in.visible { opacity:1; transform:translateY(0); }
+    .scale-up { opacity:0; transform:scale(.96); transition:opacity .6s ease, transform .6s ease; }
+    .scale-up.visible { opacity:1; transform:scale(1); }
+
+    /* Stagger delays */
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+    .delay-3 { transition-delay: 0.24s; }
+    .delay-4 { transition-delay: 0.32s; }
+    .delay-5 { transition-delay: 0.4s; }
+
+    /* Parallax helpers */
+    .parallax-bg { will-change: transform; }
+    .ken-burns { animation: kenBurns 20s ease-in-out infinite alternate; }
+    @keyframes kenBurns { 0% { transform: scale(1); } 100% { transform: scale(1.06); } }
+
+    @media (max-width:640px) { .gold-chip { padding:0.25rem .75rem; } }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Reveal on scroll using IntersectionObserver
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.animate-on-scroll, .slide-left, .slide-right, .fade-in, .scale-up, .slide-up').forEach(el => revealObserver.observe(el));
+
+    // Parallax for elements with data-parallax-speed
+    const parallaxEls = document.querySelectorAll('[data-parallax-speed], [data-parallax]');
+    const throttle = (fn, wait = 16) => {
+        let last = 0;
+        return (...args) => { const now = Date.now(); if (now - last > wait) { last = now; fn(...args); } };
+    };
+
+    function updateParallax() {
+        const scrollY = window.scrollY || window.pageYOffset;
+        parallaxEls.forEach(el => {
+            const speed = parseFloat(el.dataset.parallaxSpeed || el.dataset.parallax) || 0.5;
+            const translate = (scrollY * speed) * -0.12;
+            el.style.transform = `translate3d(0, ${translate}px, 0)`;
+        });
+    }
+
+    window.addEventListener('scroll', throttle(updateParallax));
+    updateParallax();
+});
+</script>
+{% endblock %}
 
 {% block content %}
 
 <!-- HERO -->
-<section class="relative pt-32 pb-20 overflow-hidden">
-    <div class="absolute inset-0">
-        <img src="{% static 'images/bg-dark.jpg' %}" class="w-full h-full object-cover">
+<section class="relative pt-32 pb-20 overflow-hidden hero-section">
+    <div class="absolute inset-0 parallax-bg" data-parallax-speed="0.22">
+        <img src="{% static 'images/background.png' %}" class="w-full h-full object-cover ken-burns">
         <div class="absolute inset-0 bg-black/80"></div>
     </div>
-    
+
     <div class="relative z-10 max-w-7xl mx-auto px-6 text-center">
-        <span class="inline-block px-4 py-1 bg-pink-500/20 border border-pink-500/30 rounded-full text-pink-300 text-sm font-medium mb-6">
-            Our Story
-        </span>
-
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            About <span class="text-pink-500">Us</span>
-        </h1>
-
-        <p class="text-gray-300 text-lg max-w-2xl mx-auto">
-            Discover how we turn raw talent into professional models ready for the industry.
-        </p>
+        <div class="animate-on-scroll slide-up delay-1">
+            <span class="gold-chip inline-block px-4 py-1 text-sm font-medium mb-6">Our Story</span>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">About <span class="gold-label">Us</span></h1>
+            <p class="text-gray-300 text-lg max-w-2xl mx-auto">
+                Discover how we turn raw talent into professional models ready for the industry.
+            </p>
+        </div>
     </div>
 </section>
 
@@ -33,7 +121,7 @@
     <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
 
         <!-- TEXT -->
-        <div>
+        <div class="animate-on-scroll slide-left delay-1">
             <h2 class="text-3xl font-bold mb-6">Who We Are</h2>
 
             <p class="text-gray-700 mb-4 leading-relaxed">
@@ -50,8 +138,8 @@
         </div>
 
         <!-- IMAGE -->
-        <div class="flex justify-center">
-            <img src="{% static 'images/founder.jpg' %}" 
+        <div class="flex justify-center animate-on-scroll slide-right delay-2">
+            <img src="{% static 'images/founder.jpeg' %}" data-parallax-speed="0.06"
                  class="rounded-lg shadow-lg w-[420px] hover:scale-105 transition duration-500">
         </div>
 
@@ -70,24 +158,24 @@
         <div class="grid md:grid-cols-3 gap-8">
 
             <!-- VALUE -->
-            <div class="bg-white p-8 rounded-xl shadow hover:shadow-xl transition text-center">
-                <i class="fa-solid fa-heart text-3xl text-pink-500 mb-4"></i>
+            <div class="bg-white p-8 rounded-xl shadow hover:shadow-xl transition text-center animate-on-scroll fade-in delay-1">
+                <i class="fa-solid fa-heart gold-icon mb-4"></i>
                 <h3 class="font-bold text-lg mb-2">Passion</h3>
                 <p class="text-gray-600 text-sm">
                     We are passionate about helping young talent grow and succeed.
                 </p>
             </div>
 
-            <div class="bg-white p-8 rounded-xl shadow hover:shadow-xl transition text-center">
-                <i class="fa-solid fa-star text-3xl text-pink-500 mb-4"></i>
+            <div class="bg-white p-8 rounded-xl shadow hover:shadow-xl transition text-center animate-on-scroll fade-in delay-2">
+                <i class="fa-solid fa-star gold-icon mb-4"></i>
                 <h3 class="font-bold text-lg mb-2">Excellence</h3>
                 <p class="text-gray-600 text-sm">
                     We maintain high standards in training and representation.
                 </p>
             </div>
 
-            <div class="bg-white p-8 rounded-xl shadow hover:shadow-xl transition text-center">
-                <i class="fa-solid fa-users text-3xl text-pink-500 mb-4"></i>
+            <div class="bg-white p-8 rounded-xl shadow hover:shadow-xl transition text-center animate-on-scroll fade-in delay-3">
+                <i class="fa-solid fa-users gold-icon mb-4"></i>
                 <h3 class="font-bold text-lg mb-2">Community</h3>
                 <p class="text-gray-600 text-sm">
                     We support and uplift aspiring models across South Africa.
@@ -107,14 +195,14 @@
             <h2 class="text-3xl font-bold">Meet The Founder</h2>
         </div>
 
-        <div class="bg-gray-100 rounded-xl p-8 flex flex-col md:flex-row items-center gap-8 shadow">
+        <div class="bg-gray-100 rounded-xl p-8 flex flex-col md:flex-row items-center gap-8 shadow animate-on-scroll scale-up delay-2">
 
-            <img src="{% static 'images/founder.jpg' %}" 
+            <img src="{% static 'images/founder.jpeg' %}" data-parallax-speed="0.04"
                  class="w-40 h-40 rounded-lg object-cover shadow">
 
             <div class="text-center md:text-left">
                 <h3 class="text-xl font-bold">George Joja</h3>
-                <p class="text-pink-500 font-medium mb-2">Founder & Director</p>
+                <p class="gold-meta font-medium mb-2">Founder & Director</p>
 
                 <p class="text-gray-600 text-sm">
                     George leads the agency with a clear vision — to discover, train, and connect new talent with real opportunities in the modeling industry.
@@ -131,7 +219,7 @@
 <section class="relative py-24 text-center text-white overflow-hidden">
     
     <div class="absolute inset-0">
-        <img src="{% static 'images/runway.jpg' %}" class="w-full h-full object-cover">
+        <img src="{% static 'images/2.png' %}" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black/70"></div>
     </div>
 
@@ -140,7 +228,7 @@
         <p class="mb-6 text-gray-300">Ready to become a model?</p>
 
         <a href="{% url 'apply' %}" 
-           class="bg-pink-500 px-8 py-3 rounded-md font-semibold hover:bg-pink-600 transition shadow-lg hover:scale-110">
+           class="premium-btn gold-btn px-10 py-4 rounded-xl font-bold hover:bg-gray-100 transition shadow-xl">
             Apply Now
         </a>
     </div>
