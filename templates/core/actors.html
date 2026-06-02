@@ -186,7 +186,8 @@
         margin-bottom: 24px;
     }
     .filter-btn {
-        padding: 10px 20px;
+        padding: 8px 14px;
+        min-height: 40px;
         border: 2px solid transparent;
         border-radius: 8px;
         background: rgba(212, 175, 55, 0.1);
@@ -194,6 +195,15 @@
         font-weight: 600;
         transition: all 0.3s ease;
         cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.875rem;
+    }
+    @media (min-width: 640px) {
+        .filter-btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
     }
     .filter-btn.active {
         background: var(--gold);
@@ -308,7 +318,7 @@
             <a href="{% url 'actors' %}?category=women" class="filter-btn {% if current_category == 'women' %}active{% endif %}" aria-current="{% if current_category == 'women' %}true{% endif %}">
                 Women <span class="text-xs ml-1">({{ actor_category_counts.women|default:0 }})</span>
             </a>
-            <a href="{% url 'actors' %}?category=men" class="filter-btn {% if current_category == 'men' %}active{% endif %}" aria-current="{% if current_category == 'men' %}true{% endif %}">
+            <a href="{% url 'actors' %}?category=all" class="filter-btn px-3 py-2 sm:px-4 sm:py-2 min-h-10 text-sm md:text-base {% if current_category == 'all' %}active{% endif %}" aria-current="{% if current_category == 'all' %}true{% endif %}">
                 Men <span class="text-xs ml-1">({{ actor_category_counts.men|default:0 }})</span>
             </a>
             <a href="{% url 'actors' %}?category=youth" class="filter-btn {% if current_category == 'youth' %}active{% endif %}" aria-current="{% if current_category == 'youth' %}true{% endif %}">
@@ -316,7 +326,7 @@
             </a>
         </div>
         {% if actors %}
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {% for actor in actors %}
             <a href="{% url 'actor_detail' actor.pk %}" class="model-card group relative overflow-hidden scale-up animate-on-scroll">
                 <div class="relative aspect-[3/4] overflow-hidden bg-gray-200">
