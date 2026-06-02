@@ -505,18 +505,7 @@
             }
         }
 
-        // Hide loader when DOM is fully loaded
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', hideLoader);
-        } else {
-            // Already loaded
-            hideLoader();
-        }
-
-        // Also hide on window load for all resources
-        window.addEventListener('load', hideLoader);
-
-        // Fallback: hide after 5 seconds anyway
+        // Always display loader for exactly 5 seconds
         setTimeout(hideLoader, 5000);
     });
     </script>
