@@ -98,6 +98,123 @@
             transition: width 0.3s ease;
         }
 
+        /* Premium Loader Styles */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FAFAFA 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+            visibility: visible;
+        }
+
+        #loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #loader::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(212,175,55,0.05) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .loader-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .loader-dots {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .loader-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #D4AF37, #F8D568);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            animation: loader-pulse 1.4s infinite ease-in-out;
+        }
+
+        .loader-dot:nth-child(1) {
+            animation-delay: -0.4s;
+        }
+
+        .loader-dot:nth-child(2) {
+            animation-delay: -0.2s;
+        }
+
+        .loader-dot:nth-child(3) {
+            animation-delay: 0s;
+        }
+
+        @keyframes loader-pulse {
+            0%, 60%, 100% {
+                opacity: 0.4;
+                transform: translateY(0);
+            }
+            30% {
+                opacity: 1;
+                transform: translateY(-12px);
+            }
+        }
+
+        .loader-text {
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-top: 12px;
+            animation: fade-in-out 2s ease-in-out infinite;
+        }
+
+        @keyframes fade-in-out {
+            0%, 100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .loader-line {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+            margin: 16px auto 0;
+            border-radius: 1px;
+            animation: slide-line 2s ease-in-out infinite;
+        }
+
+        @keyframes slide-line {
+            0%, 100% {
+                width: 0;
+            }
+            50% {
+                width: 60px;
+            }
+        }
+
         .nav-link:hover::after { width: 100%; }
 
         .nav-link.active { color: var(--gold-soft); }
@@ -152,9 +269,15 @@
 <body class="bg-white text-black">
 
     <div id="loader">
-        <div class="loader-dot"></div>
-        <div class="loader-dot"></div>
-        <div class="loader-dot"></div>
+        <div class="loader-container">
+            <div class="loader-dots">
+                <div class="loader-dot"></div>
+                <div class="loader-dot"></div>
+                <div class="loader-dot"></div>
+            </div>
+            <div class="loader-text">LOADING</div>
+            <div class="loader-line"></div>
+        </div>
     </div>
 
     <!-- NAVBAR -->
@@ -304,6 +427,29 @@
         };
         toggleNav();
         window.addEventListener('scroll', toggleNav, { passive: true });
+
+        // Premium Loader Handler
+        function hideLoader() {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.classList.add('hidden');
+                document.body.classList.add('loaded');
+            }
+        }
+
+        // Hide loader when DOM is fully loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            // Already loaded
+            hideLoader();
+        }
+
+        // Also hide on window load for all resources
+        window.addEventListener('load', hideLoader);
+
+        // Fallback: hide after 3 seconds anyway
+        setTimeout(hideLoader, 3000);
     });
     </script>
     {% block extra_js %}{% endblock %}
