@@ -12,14 +12,16 @@ from .models import ModelProfile, PortfolioImage, Application, ContactMessage, A
 
 class PortfolioImageInline(admin.TabularInline):
     model = PortfolioImage
-    extra = 1
-    readonly_fields = ('image',)
+    extra = 3
+    fields = ('image', 'created_at')
+    readonly_fields = ('created_at',)
 
 
 class ActorPortfolioImageInline(admin.TabularInline):
     model = ActorPortfolioImage
-    extra = 1
-    readonly_fields = ('image',)
+    extra = 3
+    fields = ('image', 'created_at')
+    readonly_fields = ('created_at',)
 
 
 def export_as_csv(modeladmin, request, queryset):
@@ -41,14 +43,23 @@ def mark_as_featured(modeladmin, request, queryset):
 
 @admin.register(ModelProfile)
 class ModelProfileAdmin(admin.ModelAdmin):
-    list_display = ('name', 'age', 'height', 'location', 'is_featured', 'created_at')
-    list_filter = ('is_featured', 'location', 'created_at')
+    list_display = ('name', 'category', 'age', 'height', 'location', 'is_featured', 'created_at')
+    list_filter = ('is_featured', 'category', 'location', 'created_at')
     search_fields = ('name', 'location', 'bio')
     list_editable = ('is_featured',)
     inlines = [PortfolioImageInline]
     readonly_fields = ('created_at', 'updated_at')
     actions = [export_as_csv, mark_as_featured]
     change_list_template = 'admin/core/modelprofile_changelist.html'
+    fieldsets = (
+        ('Profile Information', {
+            'fields': ('name', 'age', 'height', 'category', 'location', 'bio', 'profile_image', 'is_featured')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
 
     def get_urls(self):
         urls = super().get_urls()
@@ -98,14 +109,23 @@ class ModelProfileAdmin(admin.ModelAdmin):
 
 @admin.register(ActorProfile)
 class ActorProfileAdmin(admin.ModelAdmin):
-    list_display = ('name', 'age', 'height', 'location', 'is_featured', 'created_at')
-    list_filter = ('is_featured', 'location', 'created_at')
+    list_display = ('name', 'category', 'age', 'height', 'location', 'is_featured', 'created_at')
+    list_filter = ('is_featured', 'category', 'location', 'created_at')
     search_fields = ('name', 'location', 'bio')
     list_editable = ('is_featured',)
     inlines = [ActorPortfolioImageInline]
     readonly_fields = ('created_at', 'updated_at')
     actions = [export_as_csv, mark_as_featured]
     change_list_template = 'admin/core/actorprofile_changelist.html'
+    fieldsets = (
+        ('Profile Information', {
+            'fields': ('name', 'age', 'height', 'category', 'location', 'bio', 'profile_image', 'is_featured')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
 
     def get_urls(self):
         urls = super().get_urls()
@@ -166,3 +186,21 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'created_at')
     search_fields = ('name', 'email', 'message')
     readonly_fields = ('created_at',)
+
+
+@admin.register(PortfolioImage)
+class PortfolioImageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'model', 'image', 'created_at')
+    list_filter = ('created_at', 'model')
+    search_fields = ('model__name',)
+    readonly_fields = ('created_at',)
+    fields = ('model', 'image', 'created_at')
+
+
+@admin.register(ActorPortfolioImage)
+class ActorPortfolioImageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'actor', 'image', 'created_at')
+    list_filter = ('created_at', 'actor')
+    search_fields = ('actor__name',)
+    readonly_fields = ('created_at',)
+    fields = ('actor', 'image', 'created_at')
