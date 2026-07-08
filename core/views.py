@@ -45,11 +45,12 @@ class ModelsListView(ListView):
     paginate_by = 9
 
     def get_queryset(self):
-        qs = ModelProfile.objects.all().order_by('-created_at')
+        qs = ModelProfile.objects.all()
         category = self.request.GET.get('category')
         if category in ('women', 'men', 'youth'):
             qs = qs.filter(category=category)
-        return qs
+        # Ensure featured profiles appear at the top
+        return qs.order_by('-is_featured', '-created_at')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -65,11 +66,12 @@ class ActorsListView(ListView):
     paginate_by = 9
 
     def get_queryset(self):
-        qs = ActorProfile.objects.all().order_by('-created_at')
+        qs = ActorProfile.objects.all()
         category = self.request.GET.get('category')
         if category in ('women', 'men', 'youth'):
             qs = qs.filter(category=category)
-        return qs
+        # Ensure featured actors appear at the top
+        return qs.order_by('-is_featured', '-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
