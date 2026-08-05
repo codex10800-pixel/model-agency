@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -126,6 +127,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
-# Allow Render (or other hosts) to provide a persistent media mount via env var.
-# Example on Render: set RENDER_MEDIA_ROOT to "/opt/render/media" and mount a Persistent Disk there.
-MEDIA_ROOT = os.environ.get('RENDER_MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# If Cloudinary is configured via the CLOUDINARY_URL env var, use Cloudinary for
+# media file storage so uploaded files are persisted off the ephemeral host.
+if os.environ.get('CLOUDINARY_URL'):
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    # Optional Cloudinary storage settings can go here. The CLOUDINARY_URL
+    # environment variable (recommended) contains credentials in one string.
+    CLOUDINARY_STORAGE = {
+        'CACHE': True,
+    }
