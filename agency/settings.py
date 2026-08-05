@@ -126,4 +126,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Allow Render (or other hosts) to provide a persistent media mount via env var.
+# Example on Render: set RENDER_MEDIA_ROOT to "/opt/render/media" and mount a Persistent Disk there.
+MEDIA_ROOT = os.environ.get('RENDER_MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
