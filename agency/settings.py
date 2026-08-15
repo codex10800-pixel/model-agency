@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-local-development-sec
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -128,13 +127,3 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# If Cloudinary is configured via the CLOUDINARY_URL env var, use Cloudinary for
-# media file storage so uploaded files are persisted off the ephemeral host.
-if os.environ.get('CLOUDINARY_URL'):
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    # Optional Cloudinary storage settings can go here. The CLOUDINARY_URL
-    # environment variable (recommended) contains credentials in one string.
-    CLOUDINARY_STORAGE = {
-        'CACHE': True,
-    }
