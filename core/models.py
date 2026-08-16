@@ -1,6 +1,18 @@
 from django.db import models
 
 
+def sanitize_image_value(value):
+    """Reject full URL strings that should never be stored in ImageField fields."""
+    if value in (None, ''):
+        return value
+
+    value_str = str(value)
+    if value_str.startswith(('http://', 'https://')):
+        return ''
+
+    return value
+
+
 # Shared category choices for models/actors
 CATEGORY_CHOICES = [
     ('women', 'Women'),
@@ -21,6 +33,14 @@ class ModelProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def clean(self):
+        super().clean()
+        self.profile_image = sanitize_image_value(self.profile_image)
+
+    def save(self, *args, **kwargs):
+        self.profile_image = sanitize_image_value(self.profile_image)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
@@ -32,6 +52,14 @@ class PortfolioImage(models.Model):
     model = models.ForeignKey(ModelProfile, related_name='portfolio_images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='models/portfolio/')
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def clean(self):
+        super().clean()
+        self.image = sanitize_image_value(self.image)
+
+    def save(self, *args, **kwargs):
+        self.image = sanitize_image_value(self.image)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Portfolio for {self.model.name}"
@@ -49,6 +77,14 @@ class ActorProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def clean(self):
+        super().clean()
+        self.profile_image = sanitize_image_value(self.profile_image)
+
+    def save(self, *args, **kwargs):
+        self.profile_image = sanitize_image_value(self.profile_image)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
@@ -60,6 +96,14 @@ class ActorPortfolioImage(models.Model):
     actor = models.ForeignKey(ActorProfile, related_name='portfolio_images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='actors/portfolio/')
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def clean(self):
+        super().clean()
+        self.image = sanitize_image_value(self.image)
+
+    def save(self, *args, **kwargs):
+        self.image = sanitize_image_value(self.image)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Portfolio for {self.actor.name}"
@@ -74,6 +118,14 @@ class Application(models.Model):
     experience = models.TextField()
     images = models.ImageField(upload_to='applications/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def clean(self):
+        super().clean()
+        self.images = sanitize_image_value(self.images)
+
+    def save(self, *args, **kwargs):
+        self.images = sanitize_image_value(self.images)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
