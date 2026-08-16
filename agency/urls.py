@@ -21,11 +21,9 @@ from django.conf.urls.static import static
 from django.views.generic import RedirectView
 from django.views.static import serve
 from django.http import HttpResponse
-from django.contrib.staticfiles.storage import staticfiles_storage
-
 urlpatterns = [
     # Common root assets
-    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('images/logo.png'))),
+    path('favicon.ico', RedirectView.as_view(url='/static/images/logo.png')),
     path('robots.txt', lambda request: HttpResponse('User-agent: *\nDisallow:', content_type='text/plain')),
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
