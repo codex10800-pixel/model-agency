@@ -323,7 +323,7 @@
         {% if portfolio_images %}
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {% for portfolio in portfolio_images %}
-            <div class="gallery-card aspect-square scale-up animate-on-scroll">
+            <div class="gallery-card aspect-[3/4] scale-up animate-on-scroll">
                 <img src="{{ portfolio.image }}" alt="Portfolio" class="w-full h-full object-cover">
             </div>
             {% endfor %}
