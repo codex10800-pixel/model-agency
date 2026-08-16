@@ -1,18 +1,6 @@
 from django.db import models
 
 
-def sanitize_image_value(value):
-    """Reject full URL strings that should never be stored in ImageField fields."""
-    if value in (None, ''):
-        return value
-
-    value_str = str(value)
-    if value_str.startswith(('http://', 'https://')):
-        return ''
-
-    return value
-
-
 # Shared category choices for models/actors
 CATEGORY_CHOICES = [
     ('women', 'Women'),
@@ -28,18 +16,10 @@ class ModelProfile(models.Model):
     height = models.CharField(max_length=20)
     location = models.CharField(max_length=100)
     bio = models.TextField()
-    profile_image = models.ImageField(upload_to='models/profile/')
+    profile_image = models.URLField(max_length=500, blank=True, null=True)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def clean(self):
-        super().clean()
-        self.profile_image = sanitize_image_value(self.profile_image)
-
-    def save(self, *args, **kwargs):
-        self.profile_image = sanitize_image_value(self.profile_image)
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -50,16 +30,8 @@ class ModelProfile(models.Model):
 
 class PortfolioImage(models.Model):
     model = models.ForeignKey(ModelProfile, related_name='portfolio_images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='models/portfolio/')
+    image = models.URLField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def clean(self):
-        super().clean()
-        self.image = sanitize_image_value(self.image)
-
-    def save(self, *args, **kwargs):
-        self.image = sanitize_image_value(self.image)
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Portfolio for {self.model.name}"
@@ -72,18 +44,10 @@ class ActorProfile(models.Model):
     height = models.CharField(max_length=20)
     location = models.CharField(max_length=100)
     bio = models.TextField()
-    profile_image = models.ImageField(upload_to='actors/profile/')
+    profile_image = models.URLField(max_length=500, blank=True, null=True)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def clean(self):
-        super().clean()
-        self.profile_image = sanitize_image_value(self.profile_image)
-
-    def save(self, *args, **kwargs):
-        self.profile_image = sanitize_image_value(self.profile_image)
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -94,16 +58,8 @@ class ActorProfile(models.Model):
 
 class ActorPortfolioImage(models.Model):
     actor = models.ForeignKey(ActorProfile, related_name='portfolio_images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='actors/portfolio/')
+    image = models.URLField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def clean(self):
-        super().clean()
-        self.image = sanitize_image_value(self.image)
-
-    def save(self, *args, **kwargs):
-        self.image = sanitize_image_value(self.image)
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Portfolio for {self.actor.name}"
@@ -116,16 +72,8 @@ class Application(models.Model):
     phone = models.CharField(max_length=20)
     location = models.CharField(max_length=100)
     experience = models.TextField()
-    images = models.ImageField(upload_to='applications/', blank=True, null=True)
+    images = models.URLField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def clean(self):
-        super().clean()
-        self.images = sanitize_image_value(self.images)
-
-    def save(self, *args, **kwargs):
-        self.images = sanitize_image_value(self.images)
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

@@ -331,7 +331,7 @@
             <a href="{% url 'actor_detail' actor.pk %}" class="model-card group relative overflow-hidden scale-up animate-on-scroll">
                 <div class="relative aspect-[3/4] overflow-hidden bg-gray-200">
                     {% if actor.profile_image %}
-                    <img src="{{ actor.profile_image.url }}" alt="{{ actor.name }}" class="model-image w-full h-full object-cover">
+                    <img src="{{ actor.profile_image }}" alt="{{ actor.name }}" class="model-image w-full h-full object-cover">
                     {% else %}
                     <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
                         <i class="fa-solid fa-user text-6xl text-gray-600"></i>

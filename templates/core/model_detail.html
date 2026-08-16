@@ -258,7 +258,7 @@
             <div class="detail-panel scale-up animate-on-scroll overflow-hidden">
                 <div class="relative aspect-[3/4] overflow-hidden bg-gray-200">
                     {% if model.profile_image %}
-                    <img src="{{ model.profile_image.url }}" alt="{{ model.name }}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
+                    <img src="{{ model.profile_image }}" alt="{{ model.name }}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
                     {% else %}
                     <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
                         <i class="fa-solid fa-user text-6xl text-gray-600"></i>
@@ -324,7 +324,7 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {% for portfolio in portfolio_images %}
             <div class="gallery-card aspect-square scale-up animate-on-scroll">
-                <img src="{{ portfolio.image.url }}" alt="Portfolio" class="w-full h-full object-cover">
+                <img src="{{ portfolio.image }}" alt="Portfolio" class="w-full h-full object-cover">
             </div>
             {% endfor %}
         </div>
@@ -352,7 +352,7 @@
             <a href="{% url 'model_detail' related.pk %}" class="related-card scale-up animate-on-scroll overflow-hidden group">
                 <div class="aspect-[3/4] overflow-hidden bg-gray-200">
                     {% if related.profile_image %}
-                    <img src="{{ related.profile_image.url }}" alt="{{ related.name }}" class="w-full h-full object-cover">
+                    <img src="{{ related.profile_image }}" alt="{{ related.name }}" class="w-full h-full object-cover">
                     {% else %}
                     <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
                         <i class="fa-solid fa-user text-4xl text-gray-600"></i>
