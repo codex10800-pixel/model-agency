@@ -4,6 +4,7 @@ from django.urls import path, reverse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db import transaction
+from django.utils.html import format_html
 import csv
 import io
 
@@ -175,11 +176,23 @@ class ActorProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'application_type', 'age', 'email', 'phone', 'location', 'created_at')
+    list_display = ('name', 'application_type', 'age', 'email', 'phone', 'location', 'image_preview', 'created_at')
     list_filter = ('application_type', 'location', 'created_at')
     search_fields = ('name', 'email', 'phone', 'location', 'application_type')
-    readonly_fields = ('created_at',)
-    fields = ('name', 'age', 'email', 'phone', 'location', 'application_type', 'experience', 'images', 'created_at')
+    readonly_fields = ('created_at', 'image_preview')
+    fields = ('name', 'age', 'email', 'phone', 'location', 'application_type', 'experience', 'images', 'image_preview', 'created_at')
+
+    def image_preview(self, obj):
+        if not obj.images:
+            return 'No image'
+
+        image_url = obj.images.url if hasattr(obj.images, 'url') else str(obj.images)
+        return format_html(
+            '<img src="{}" style="width: 90px; height: 110px; object-fit: cover; border-radius: 10px; border: 1px solid #d4af37; background: #f5f5f5;" />',
+            image_url
+        )
+
+    image_preview.short_description = 'Photo'
 
 
 @admin.register(ContactMessage)

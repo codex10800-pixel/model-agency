@@ -1,5 +1,9 @@
+from io import BytesIO
+
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
 from django.urls import reverse
+from PIL import Image
 
 from core.forms import ApplicationForm
 from core.models import ModelProfile, ActorProfile, Application
@@ -71,3 +75,39 @@ class CloudinaryRemoteUrlFieldTests(TestCase):
         )
 
         self.assertContains(response, 'Application submitted successfully for Model!')
+
+    def test_application_upload_is_saved_as_a_viewable_url(self):
+        client = Client()
+
+        image = Image.new('RGB', (10, 10), color='blue')
+        byte_array = BytesIO()
+        image.save(byte_array, format='JPEG')
+        upload = SimpleUploadedFile(
+            'applicant-photo.jpg',
+            byte_array.getvalue(),
+            content_type='image/jpeg'
+        )
+
+        response = client.post(
+            reverse('apply'),
+            {
+                'name': 'Upload Applicant',
+                'age': 24,
+                'email': 'upload@example.com',
+                'phone': '+27123456789',
+                'location': 'Durban',
+                'application_type': 'actor',
+                'experience': 'Experience in print and commercials.',
+                'images': upload,
+            },
+            secure=True,
+            follow=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        application = Application.objects.filter(email='upload@example.com').latest('created_at')
+        self.assertTrue(application.images)
+        self.assertTrue(
+            str(application.images.url).startswith('http') or '/media/' in str(application.images.url),
+            f'Expected a public URL or media path, got: {application.images.url}'
+        )
