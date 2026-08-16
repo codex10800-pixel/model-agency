@@ -1,6 +1,8 @@
-from django.test import TestCase
+from django.test import Client, TestCase
+from django.urls import reverse
 
-from core.models import ModelProfile, ActorProfile
+from core.forms import ApplicationForm
+from core.models import ModelProfile, ActorProfile, Application
 
 
 class CloudinaryRemoteUrlFieldTests(TestCase):
@@ -33,3 +35,39 @@ class CloudinaryRemoteUrlFieldTests(TestCase):
         actor.save()
 
         self.assertEqual(actor.profile_image, url)
+
+    def test_application_form_saves_application_type(self):
+        form = ApplicationForm(data={
+            'name': 'Test Applicant',
+            'age': 23,
+            'email': 'applicant@example.com',
+            'phone': '+27123456789',
+            'location': 'Cape Town',
+            'application_type': 'actor',
+            'experience': 'Some experience in runway and commercial work.',
+        })
+
+        self.assertTrue(form.is_valid(), form.errors)
+        application = form.save()
+
+        self.assertEqual(application.application_type, 'actor')
+        self.assertTrue(Application.objects.filter(pk=application.pk).exists())
+
+    def test_apply_success_message_includes_application_type(self):
+        client = Client()
+        response = client.post(
+            reverse('apply'),
+            {
+                'name': 'Test Applicant',
+                'age': 23,
+                'email': 'applicant@example.com',
+                'phone': '+27123456789',
+                'location': 'Cape Town',
+                'application_type': 'model',
+                'experience': 'Some experience in runway and commercial work.',
+            },
+            secure=True,
+            follow=True,
+        )
+
+        self.assertContains(response, 'Application submitted successfully for Model!')

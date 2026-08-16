@@ -175,10 +175,11 @@ class ActorProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'age', 'email', 'phone', 'location', 'created_at')
-    list_filter = ('location', 'created_at')
-    search_fields = ('name', 'email', 'phone', 'location')
+    list_display = ('name', 'application_type', 'age', 'email', 'phone', 'location', 'created_at')
+    list_filter = ('application_type', 'location', 'created_at')
+    search_fields = ('name', 'email', 'phone', 'location', 'application_type')
     readonly_fields = ('created_at',)
+    fields = ('name', 'age', 'email', 'phone', 'location', 'application_type', 'experience', 'images', 'created_at')
 
 
 @admin.register(ContactMessage)

@@ -30,14 +30,14 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get(
     'ALLOWED_HOSTS',
-    'localhost,127.0.0.1,facemodeling.onrender.com,.onrender.com'
+    'localhost,127.0.0.1,testserver,facemodeling.onrender.com,.onrender.com'
 ).split(',')
 
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
     for origin in os.environ.get(
         'CSRF_TRUSTED_ORIGINS',
-        'https://facemodeling.onrender.com,https://www.facemodeling.onrender.com'
+        'https://facemodeling.onrender.com,https://www.facemodeling.onrender.com,http://localhost:8000,http://127.0.0.1:8000'
     ).split(',') if origin.strip()
 ]
 

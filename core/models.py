@@ -66,11 +66,17 @@ class ActorPortfolioImage(models.Model):
 
 
 class Application(models.Model):
+    APPLICATION_TYPE_CHOICES = [
+        ('model', 'Model'),
+        ('actor', 'Actor'),
+    ]
+
     name = models.CharField(max_length=100)
     age = models.PositiveIntegerField()
     email = models.EmailField()
     phone = models.CharField(max_length=20)
     location = models.CharField(max_length=100)
+    application_type = models.CharField(max_length=10, choices=APPLICATION_TYPE_CHOICES, default='model')
     experience = models.TextField()
     images = models.URLField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

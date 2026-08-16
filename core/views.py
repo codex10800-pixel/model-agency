@@ -113,7 +113,12 @@ class ApplyView(FormView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, 'Application submitted successfully! We will contact you soon.')
+        application_type = form.cleaned_data.get('application_type')
+        application_label = dict(form.fields['application_type'].choices).get(application_type, application_type.title())
+        messages.success(
+            self.request,
+            f'Application submitted successfully for {application_label}! We will contact you soon.'
+        )
         return super().form_valid(form)
 
     def form_invalid(self, form):

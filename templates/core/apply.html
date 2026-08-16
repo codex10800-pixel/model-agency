@@ -183,6 +183,50 @@
         font-weight: 500;
     }
 
+    .success-banner {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 18px;
+        border-radius: 16px;
+        border: 1px solid rgba(212, 175, 55, 0.35);
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), rgba(255,255,255,0.8));
+        color: #1f2937;
+        box-shadow: 0 12px 28px rgba(212, 175, 55, 0.12);
+        animation: successBannerGlow 1.8s ease-in-out infinite alternate;
+    }
+
+    .success-banner-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #d4af37, #f8d568);
+        color: #111111;
+        font-size: 1.1rem;
+        box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.12);
+        animation: successCheckPulse 1.5s ease-in-out infinite;
+    }
+
+    .success-banner-text {
+        font-weight: 700;
+        line-height: 1.5;
+        letter-spacing: 0.02em;
+    }
+
+    @keyframes successBannerGlow {
+        0% { box-shadow: 0 8px 20px rgba(212, 175, 55, 0.08); }
+        100% { box-shadow: 0 16px 32px rgba(212, 175, 55, 0.18); }
+    }
+
+    @keyframes successCheckPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+    }
+
     /* Requirement card styling */
     .requirement-card {
         background: white;
@@ -288,6 +332,20 @@
     <div class="max-w-4xl mx-auto px-6">
         
         <div class="form-container p-10 md:p-14 animate-on-scroll scale-up">
+
+            {% if messages %}
+                <div class="mb-8 space-y-3">
+                    {% for message in messages %}
+                        <div class="success-banner
+                            {% if message.tags == 'error' %}bg-red-50 border-red-200 text-red-700
+                            {% elif message.tags == 'warning' %}bg-amber-50 border-amber-200 text-amber-800
+                            {% endif %}">
+                            <span class="success-banner-icon"><i class="fa-solid fa-check"></i></span>
+                            <span class="success-banner-text">{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
             
             <form method="post" enctype="multipart/form-data" class="space-y-8">
                 {% csrf_token %}
@@ -341,11 +399,19 @@
                     {% endif %}
                 </div>
 
+                <div class="slide-left animate-on-scroll delay-3">
+                    <label class="form-label">Applying For *</label>
+                    {{ form.application_type }}
+                    {% if form.application_type.errors %}
+                    <p class="form-error">{{ form.application_type.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
                 <div class="slide-left animate-on-scroll delay-4">
                     <label class="form-label">Experience *</label>
                     {{ form.experience }}
                     <p class="text-gray-500 text-sm mt-2">
-                        Briefly describe your experience (or tell us why you want to start modeling).
+                        Briefly describe your experience (or tell us why you want to start modeling or Acting).
                     </p>
                 </div>
 

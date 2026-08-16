@@ -5,7 +5,7 @@ from .models import Application, ContactMessage
 class ApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
-        fields = ['name', 'age', 'email', 'phone', 'location', 'experience', 'images']
+        fields = ['name', 'age', 'email', 'phone', 'location', 'application_type', 'experience', 'images']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-amber-500 transition-colors',
@@ -28,6 +28,9 @@ class ApplicationForm(forms.ModelForm):
             'location': forms.TextInput(attrs={
                 'class': 'w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-amber-500 transition-colors',
                 'placeholder': 'City, Country'
+            }),
+            'application_type': forms.Select(attrs={
+                'class': 'w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-amber-500 transition-colors'
             }),
             'experience': forms.Textarea(attrs={
                 'class': 'w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-amber-500 transition-colors',
