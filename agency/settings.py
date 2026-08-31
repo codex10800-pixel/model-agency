@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -93,8 +94,20 @@ WSGI_APPLICATION = 'agency.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+DATABASE_URL = os.environ.get('DATABASE_URL')
+IS_RENDER = bool(os.environ.get('RENDER_EXTERNAL_HOSTNAME'))
+
+if (not DEBUG or IS_RENDER) and not DATABASE_URL:
+    raise ImproperlyConfigured(
+        'DATABASE_URL must be configured in production. SQLite is only supported for local development.'
+    )
+
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL', f'sqlite:///{BASE_DIR / "db.sqlite3"}'))
+    'default': dj_database_url.config(
+        default=DATABASE_URL or f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 STATICFILES_DIRS = [
